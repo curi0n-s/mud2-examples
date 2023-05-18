@@ -1,4 +1,5 @@
-import { useComponentValue } from "@latticexyz/react";
+import { useComponentValue, useRow, useEntityQuery } from "@latticexyz/react";
+import { Has, HasValue, getComponentValueStrict } from "@latticexyz/recs";
 import { useMUD } from "./MUDContext";
 import { useState } from "react";
 
@@ -6,22 +7,52 @@ export const App = () => {
   const {
     components: { Counter, TestData, TestKeyedData },
     systemCalls: { increment, incrementSquared, pushRecordToTestData, pushRecordToTestKeyedData },
-    network: { singletonEntity },
+    network: { singletonEntity, storeCache },
+    world,
   } = useMUD();
+  const [recordId, setRecordId] = useState(1);
+
+  // Access components either via ECS or via useRow as shown in the livestream
+  // ECS queries can find by value, useRow can also find by key
 
   const counter = useComponentValue(Counter, singletonEntity);
+  console.log("counter", counter);
+
   const testData = useComponentValue(TestData, singletonEntity);
-  const testKeyedData = useComponentValue(TestKeyedData, { id: 0 });
 
-  console.log("testKeyedData 0", testKeyedData?.[0]);
+  const counter2 = useRow(storeCache, { table: "Counter", key: {} });
+  console.log(counter2);
 
-  const [recordId, setRecordId] = useState("");
+  const matchingEntities = useEntityQuery([Has(TestKeyedData)]);
+  console.log("entities", matchingEntities[0]);
+
+  const matchingEntities2 = useEntityQuery([
+    Has(TestKeyedData),
+    HasValue(TestKeyedData, { testUint32: Number(recordId) }),
+  ]);
+  console.log("recordId", recordId);
+  console.log("typeof recordId", typeof recordId);
+  console.log("entities2", matchingEntities2);
+
+  const tableInstances = matchingEntities.map((testEntity) => getComponentValueStrict(TestKeyedData, testEntity));
+  console.log("tableInstance", tableInstances);
+  console.log("tableInstances[1].testUint32", tableInstances[0].testUint32);
+
+  //get table row by key (id)
+
+  const testKeyedData2 = useRow(storeCache, { table: "TestKeyedData", key: { id: Number(recordId) } });
+  console.log("testKeyedData2", testKeyedData2);
+  console.log("testKeyedData2.testUint32", testKeyedData2?.value.testUint32);
 
   return (
     <>
       <div>
         Counter: <span>{counter?.counterValue ?? "??"}</span>
+        <p>
+          Counter2: <span>{counter2?.value.counterValue ?? "??"}</span>
+        </p>
       </div>
+
       <button
         type="button"
         onClick={async (event) => {
@@ -38,7 +69,7 @@ export const App = () => {
       <button
         type="button"
         onClick={async (event) => {
-          event.preventDefault();
+          // event.preventDefault();
           console.log("new counter value:", await incrementSquared());
         }}
       >
@@ -64,7 +95,7 @@ export const App = () => {
       <button
         type="button"
         onClick={async (event) => {
-          event.preventDefault();
+          // event.preventDefault();
           console.log("testData record testUint32:", await pushRecordToTestData());
         }}
       >
@@ -73,7 +104,7 @@ export const App = () => {
 
       <p>
         {/* get data from testKeyedData of key recordId */}
-        TestKeyedData testUint32: <span>{testKeyedData?.[{ id: recordId }]?.testUint32 ?? "??" ?? "??"}</span>
+        TestKeyedData testUint32: <span>{testKeyedData2?.value.1testUint32 ?? "??" ?? "??"}</span>
       </p>
       <div>
         <input
