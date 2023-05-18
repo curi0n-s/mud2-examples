@@ -1,15 +1,22 @@
 import { useComponentValue } from "@latticexyz/react";
 import { useMUD } from "./MUDContext";
+import { useState } from "react";
 
 export const App = () => {
   const {
-    components: { Counter, TestData },
-    systemCalls: { increment, incrementSquared, pushRecordToTestData },
+    components: { Counter, TestData, TestKeyedData },
+    systemCalls: { increment, incrementSquared, pushRecordToTestData, pushRecordToTestKeyedData },
     network: { singletonEntity },
   } = useMUD();
 
   const counter = useComponentValue(Counter, singletonEntity);
   const testData = useComponentValue(TestData, singletonEntity);
+  const testKeyedData = useComponentValue(TestKeyedData);
+
+  let newKeyedData;
+
+  const [recordId, setRecordId] = useState("");
+  const [testUint32Val, setTestUint32Val] = useState(0);
 
   return (
     <>
@@ -63,6 +70,30 @@ export const App = () => {
         }}
       >
         Push Record
+      </button>
+
+      <p>
+        {/* get data from testKeyedData of key recordId */}
+        TestKeyedData testUint32: <span>{testUint32Val ?? "??"}</span>
+      </p>
+      <div>
+        <input
+          onChange={(event) => {
+            event.preventDefault();
+            setRecordId(event.target.value);
+            setTestUint32Val(testKeyedData?.[recordId]?.testUint32 ?? "??");
+          }}
+        />
+      </div>
+      <button
+        type="button"
+        onClick={async (event) => {
+          event.preventDefault();
+          await pushRecordToTestKeyedData(recordId);
+          setTestUint32Val(testKeyedData?.[recordId]?.testUint32 ?? "??");
+        }}
+      >
+        Push Record by Key ID
       </button>
     </>
   );
