@@ -5,4 +5,8 @@ pragma solidity >=0.8.0;
 
 interface ITestDataSystem {
   function pushRecordToTestData() external returns (uint32);
+
+  function setInitialArray(uint32[] memory _array) external;
+
+  function randomStringWithSeed(uint32 _seed) external view returns (string memory);
 }

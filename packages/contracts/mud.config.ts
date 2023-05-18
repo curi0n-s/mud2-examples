@@ -12,10 +12,10 @@ export default mudConfig({
     TestData: {
       keySchema: {},
       schema: {
-        name: "string",
         testUint32: "uint32",
-        testUintArray: "uint256[]",
         testBytes32: "bytes32",
+        testString: "string",
+        testUint32Array: "uint32[]",
       }
     }
   },

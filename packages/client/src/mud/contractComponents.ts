@@ -26,10 +26,10 @@ export function defineContractComponents(world: World) {
       return defineComponent(
         world,
         {
-          name: RecsType.String,
           testUint32: RecsType.Number,
-          testUintArray: RecsType.BigIntArray,
           testBytes32: RecsType.String,
+          testString: RecsType.String,
+          testUint32Array: RecsType.NumberArray,
         },
         {
           metadata: {

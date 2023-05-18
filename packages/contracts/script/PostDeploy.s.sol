@@ -23,12 +23,12 @@ contract PostDeploy is Script {
     console.log("Increment squared via IWorld:", newValueSquared);
 
     // Call pushRecordToTestData
-    (
-      string memory testString, 
-      uint32 testUint32, 
-      uint256[] memory testUintArray, 
-      bytes32 testBytes32
-    ) = IWorld(worldAddress).pushRecordToTestData();
+    uint32[] memory testArray = new uint32[](3);
+    testArray[0] = 1;
+    testArray[1] = 2;
+    testArray[2] = 3;
+    IWorld(worldAddress).setInitialArray(testArray);
+    uint32 testUint32 = IWorld(worldAddress).pushRecordToTestData();
     console.log("Pushed record to TestData:", testUint32);
 
     vm.stopBroadcast();

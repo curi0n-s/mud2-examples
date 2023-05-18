@@ -21,20 +21,20 @@ bytes32 constant _tableId = bytes32(abi.encodePacked(bytes16(""), bytes16("TestD
 bytes32 constant TestDataTableId = _tableId;
 
 struct TestDataData {
-  string name;
   uint32 testUint32;
-  uint256[] testUintArray;
   bytes32 testBytes32;
+  string testString;
+  uint32[] testUint32Array;
 }
 
 library TestData {
   /** Get the table's schema */
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](4);
-    _schema[0] = SchemaType.STRING;
-    _schema[1] = SchemaType.UINT32;
-    _schema[2] = SchemaType.UINT256_ARRAY;
-    _schema[3] = SchemaType.BYTES32;
+    _schema[0] = SchemaType.UINT32;
+    _schema[1] = SchemaType.BYTES32;
+    _schema[2] = SchemaType.STRING;
+    _schema[3] = SchemaType.UINT32_ARRAY;
 
     return SchemaLib.encode(_schema);
   }
@@ -48,10 +48,10 @@ library TestData {
   /** Get the table's metadata */
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](4);
-    _fieldNames[0] = "name";
-    _fieldNames[1] = "testUint32";
-    _fieldNames[2] = "testUintArray";
-    _fieldNames[3] = "testBytes32";
+    _fieldNames[0] = "testUint32";
+    _fieldNames[1] = "testBytes32";
+    _fieldNames[2] = "testString";
+    _fieldNames[3] = "testUint32Array";
     return ("TestData", _fieldNames);
   }
 
@@ -77,115 +77,11 @@ library TestData {
     _store.setMetadata(_tableId, _tableName, _fieldNames);
   }
 
-  /** Get name */
-  function getName() internal view returns (string memory name) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
-    return (string(_blob));
-  }
-
-  /** Get name (using the specified store) */
-  function getName(IStore _store) internal view returns (string memory name) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
-    return (string(_blob));
-  }
-
-  /** Set name */
-  function setName(string memory name) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setField(_tableId, _keyTuple, 0, bytes((name)));
-  }
-
-  /** Set name (using the specified store) */
-  function setName(IStore _store, string memory name) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setField(_tableId, _keyTuple, 0, bytes((name)));
-  }
-
-  /** Get the length of name */
-  function lengthName() internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 0, getSchema());
-    return _byteLength / 1;
-  }
-
-  /** Get the length of name (using the specified store) */
-  function lengthName(IStore _store) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 0, getSchema());
-    return _byteLength / 1;
-  }
-
-  /** Get an item of name (unchecked, returns invalid data if index overflows) */
-  function getItemName(uint256 _index) internal view returns (string memory) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 0, getSchema(), _index * 1, (_index + 1) * 1);
-    return (string(_blob));
-  }
-
-  /** Get an item of name (using the specified store) (unchecked, returns invalid data if index overflows) */
-  function getItemName(IStore _store, uint256 _index) internal view returns (string memory) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 0, getSchema(), _index * 1, (_index + 1) * 1);
-    return (string(_blob));
-  }
-
-  /** Push a slice to name */
-  function pushName(string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.pushToField(_tableId, _keyTuple, 0, bytes((_slice)));
-  }
-
-  /** Push a slice to name (using the specified store) */
-  function pushName(IStore _store, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.pushToField(_tableId, _keyTuple, 0, bytes((_slice)));
-  }
-
-  /** Pop a slice from name */
-  function popName() internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.popFromField(_tableId, _keyTuple, 0, 1);
-  }
-
-  /** Pop a slice from name (using the specified store) */
-  function popName(IStore _store) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.popFromField(_tableId, _keyTuple, 0, 1);
-  }
-
-  /** Update a slice of name at `_index` */
-  function updateName(uint256 _index, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.updateInField(_tableId, _keyTuple, 0, _index * 1, bytes((_slice)));
-  }
-
-  /** Update a slice of name (using the specified store) at `_index` */
-  function updateName(IStore _store, uint256 _index, string memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.updateInField(_tableId, _keyTuple, 0, _index * 1, bytes((_slice)));
-  }
-
   /** Get testUint32 */
   function getTestUint32() internal view returns (uint32 testUint32) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 0);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -193,7 +89,7 @@ library TestData {
   function getTestUint32(IStore _store) internal view returns (uint32 testUint32) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 0);
     return (uint32(Bytes.slice4(_blob, 0)));
   }
 
@@ -201,125 +97,21 @@ library TestData {
   function setTestUint32(uint32 testUint32) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((testUint32)));
+    StoreSwitch.setField(_tableId, _keyTuple, 0, abi.encodePacked((testUint32)));
   }
 
   /** Set testUint32 (using the specified store) */
   function setTestUint32(IStore _store, uint32 testUint32) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((testUint32)));
-  }
-
-  /** Get testUintArray */
-  function getTestUintArray() internal view returns (uint256[] memory testUintArray) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint256());
-  }
-
-  /** Get testUintArray (using the specified store) */
-  function getTestUintArray(IStore _store) internal view returns (uint256[] memory testUintArray) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
-    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint256());
-  }
-
-  /** Set testUintArray */
-  function setTestUintArray(uint256[] memory testUintArray) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.setField(_tableId, _keyTuple, 2, EncodeArray.encode((testUintArray)));
-  }
-
-  /** Set testUintArray (using the specified store) */
-  function setTestUintArray(IStore _store, uint256[] memory testUintArray) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.setField(_tableId, _keyTuple, 2, EncodeArray.encode((testUintArray)));
-  }
-
-  /** Get the length of testUintArray */
-  function lengthTestUintArray() internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 2, getSchema());
-    return _byteLength / 32;
-  }
-
-  /** Get the length of testUintArray (using the specified store) */
-  function lengthTestUintArray(IStore _store) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 2, getSchema());
-    return _byteLength / 32;
-  }
-
-  /** Get an item of testUintArray (unchecked, returns invalid data if index overflows) */
-  function getItemTestUintArray(uint256 _index) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 2, getSchema(), _index * 32, (_index + 1) * 32);
-    return (uint256(Bytes.slice32(_blob, 0)));
-  }
-
-  /** Get an item of testUintArray (using the specified store) (unchecked, returns invalid data if index overflows) */
-  function getItemTestUintArray(IStore _store, uint256 _index) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 2, getSchema(), _index * 32, (_index + 1) * 32);
-    return (uint256(Bytes.slice32(_blob, 0)));
-  }
-
-  /** Push an element to testUintArray */
-  function pushTestUintArray(uint256 _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.pushToField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
-  }
-
-  /** Push an element to testUintArray (using the specified store) */
-  function pushTestUintArray(IStore _store, uint256 _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.pushToField(_tableId, _keyTuple, 2, abi.encodePacked((_element)));
-  }
-
-  /** Pop an element from testUintArray */
-  function popTestUintArray() internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.popFromField(_tableId, _keyTuple, 2, 32);
-  }
-
-  /** Pop an element from testUintArray (using the specified store) */
-  function popTestUintArray(IStore _store) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.popFromField(_tableId, _keyTuple, 2, 32);
-  }
-
-  /** Update an element of testUintArray at `_index` */
-  function updateTestUintArray(uint256 _index, uint256 _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    StoreSwitch.updateInField(_tableId, _keyTuple, 2, _index * 32, abi.encodePacked((_element)));
-  }
-
-  /** Update an element of testUintArray (using the specified store) at `_index` */
-  function updateTestUintArray(IStore _store, uint256 _index, uint256 _element) internal {
-    bytes32[] memory _keyTuple = new bytes32[](0);
-
-    _store.updateInField(_tableId, _keyTuple, 2, _index * 32, abi.encodePacked((_element)));
+    _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((testUint32)));
   }
 
   /** Get testBytes32 */
   function getTestBytes32() internal view returns (bytes32 testBytes32) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
     return (Bytes.slice32(_blob, 0));
   }
 
@@ -327,7 +119,7 @@ library TestData {
   function getTestBytes32(IStore _store) internal view returns (bytes32 testBytes32) {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
     return (Bytes.slice32(_blob, 0));
   }
 
@@ -335,14 +127,222 @@ library TestData {
   function setTestBytes32(bytes32 testBytes32) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    StoreSwitch.setField(_tableId, _keyTuple, 3, abi.encodePacked((testBytes32)));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((testBytes32)));
   }
 
   /** Set testBytes32 (using the specified store) */
   function setTestBytes32(IStore _store, bytes32 testBytes32) internal {
     bytes32[] memory _keyTuple = new bytes32[](0);
 
-    _store.setField(_tableId, _keyTuple, 3, abi.encodePacked((testBytes32)));
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((testBytes32)));
+  }
+
+  /** Get testString */
+  function getTestString() internal view returns (string memory testString) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    return (string(_blob));
+  }
+
+  /** Get testString (using the specified store) */
+  function getTestString(IStore _store) internal view returns (string memory testString) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    return (string(_blob));
+  }
+
+  /** Set testString */
+  function setTestString(string memory testString) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setField(_tableId, _keyTuple, 2, bytes((testString)));
+  }
+
+  /** Set testString (using the specified store) */
+  function setTestString(IStore _store, string memory testString) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.setField(_tableId, _keyTuple, 2, bytes((testString)));
+  }
+
+  /** Get the length of testString */
+  function lengthTestString() internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 2, getSchema());
+    return _byteLength / 1;
+  }
+
+  /** Get the length of testString (using the specified store) */
+  function lengthTestString(IStore _store) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 2, getSchema());
+    return _byteLength / 1;
+  }
+
+  /** Get an item of testString (unchecked, returns invalid data if index overflows) */
+  function getItemTestString(uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 2, getSchema(), _index * 1, (_index + 1) * 1);
+    return (string(_blob));
+  }
+
+  /** Get an item of testString (using the specified store) (unchecked, returns invalid data if index overflows) */
+  function getItemTestString(IStore _store, uint256 _index) internal view returns (string memory) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 2, getSchema(), _index * 1, (_index + 1) * 1);
+    return (string(_blob));
+  }
+
+  /** Push a slice to testString */
+  function pushTestString(string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.pushToField(_tableId, _keyTuple, 2, bytes((_slice)));
+  }
+
+  /** Push a slice to testString (using the specified store) */
+  function pushTestString(IStore _store, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.pushToField(_tableId, _keyTuple, 2, bytes((_slice)));
+  }
+
+  /** Pop a slice from testString */
+  function popTestString() internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.popFromField(_tableId, _keyTuple, 2, 1);
+  }
+
+  /** Pop a slice from testString (using the specified store) */
+  function popTestString(IStore _store) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.popFromField(_tableId, _keyTuple, 2, 1);
+  }
+
+  /** Update a slice of testString at `_index` */
+  function updateTestString(uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.updateInField(_tableId, _keyTuple, 2, _index * 1, bytes((_slice)));
+  }
+
+  /** Update a slice of testString (using the specified store) at `_index` */
+  function updateTestString(IStore _store, uint256 _index, string memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.updateInField(_tableId, _keyTuple, 2, _index * 1, bytes((_slice)));
+  }
+
+  /** Get testUint32Array */
+  function getTestUint32Array() internal view returns (uint32[] memory testUint32Array) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 3);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
+  }
+
+  /** Get testUint32Array (using the specified store) */
+  function getTestUint32Array(IStore _store) internal view returns (uint32[] memory testUint32Array) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 3);
+    return (SliceLib.getSubslice(_blob, 0, _blob.length).decodeArray_uint32());
+  }
+
+  /** Set testUint32Array */
+  function setTestUint32Array(uint32[] memory testUint32Array) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.setField(_tableId, _keyTuple, 3, EncodeArray.encode((testUint32Array)));
+  }
+
+  /** Set testUint32Array (using the specified store) */
+  function setTestUint32Array(IStore _store, uint32[] memory testUint32Array) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.setField(_tableId, _keyTuple, 3, EncodeArray.encode((testUint32Array)));
+  }
+
+  /** Get the length of testUint32Array */
+  function lengthTestUint32Array() internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 3, getSchema());
+    return _byteLength / 4;
+  }
+
+  /** Get the length of testUint32Array (using the specified store) */
+  function lengthTestUint32Array(IStore _store) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 3, getSchema());
+    return _byteLength / 4;
+  }
+
+  /** Get an item of testUint32Array (unchecked, returns invalid data if index overflows) */
+  function getItemTestUint32Array(uint256 _index) internal view returns (uint32) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 3, getSchema(), _index * 4, (_index + 1) * 4);
+    return (uint32(Bytes.slice4(_blob, 0)));
+  }
+
+  /** Get an item of testUint32Array (using the specified store) (unchecked, returns invalid data if index overflows) */
+  function getItemTestUint32Array(IStore _store, uint256 _index) internal view returns (uint32) {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 3, getSchema(), _index * 4, (_index + 1) * 4);
+    return (uint32(Bytes.slice4(_blob, 0)));
+  }
+
+  /** Push an element to testUint32Array */
+  function pushTestUint32Array(uint32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.pushToField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
+  }
+
+  /** Push an element to testUint32Array (using the specified store) */
+  function pushTestUint32Array(IStore _store, uint32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.pushToField(_tableId, _keyTuple, 3, abi.encodePacked((_element)));
+  }
+
+  /** Pop an element from testUint32Array */
+  function popTestUint32Array() internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.popFromField(_tableId, _keyTuple, 3, 4);
+  }
+
+  /** Pop an element from testUint32Array (using the specified store) */
+  function popTestUint32Array(IStore _store) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.popFromField(_tableId, _keyTuple, 3, 4);
+  }
+
+  /** Update an element of testUint32Array at `_index` */
+  function updateTestUint32Array(uint256 _index, uint32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    StoreSwitch.updateInField(_tableId, _keyTuple, 3, _index * 4, abi.encodePacked((_element)));
+  }
+
+  /** Update an element of testUint32Array (using the specified store) at `_index` */
+  function updateTestUint32Array(IStore _store, uint256 _index, uint32 _element) internal {
+    bytes32[] memory _keyTuple = new bytes32[](0);
+
+    _store.updateInField(_tableId, _keyTuple, 3, _index * 4, abi.encodePacked((_element)));
   }
 
   /** Get the full data */
@@ -362,8 +362,13 @@ library TestData {
   }
 
   /** Set the full data using individual values */
-  function set(string memory name, uint32 testUint32, uint256[] memory testUintArray, bytes32 testBytes32) internal {
-    bytes memory _data = encode(name, testUint32, testUintArray, testBytes32);
+  function set(
+    uint32 testUint32,
+    bytes32 testBytes32,
+    string memory testString,
+    uint32[] memory testUint32Array
+  ) internal {
+    bytes memory _data = encode(testUint32, testBytes32, testString, testUint32Array);
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
@@ -373,12 +378,12 @@ library TestData {
   /** Set the full data using individual values (using the specified store) */
   function set(
     IStore _store,
-    string memory name,
     uint32 testUint32,
-    uint256[] memory testUintArray,
-    bytes32 testBytes32
+    bytes32 testBytes32,
+    string memory testString,
+    uint32[] memory testUint32Array
   ) internal {
-    bytes memory _data = encode(name, testUint32, testUintArray, testBytes32);
+    bytes memory _data = encode(testUint32, testBytes32, testString, testUint32Array);
 
     bytes32[] memory _keyTuple = new bytes32[](0);
 
@@ -387,12 +392,12 @@ library TestData {
 
   /** Set the full data using the data struct */
   function set(TestDataData memory _table) internal {
-    set(_table.name, _table.testUint32, _table.testUintArray, _table.testBytes32);
+    set(_table.testUint32, _table.testBytes32, _table.testString, _table.testUint32Array);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, TestDataData memory _table) internal {
-    set(_store, _table.name, _table.testUint32, _table.testUintArray, _table.testBytes32);
+    set(_store, _table.testUint32, _table.testBytes32, _table.testString, _table.testUint32Array);
   }
 
   /** Decode the tightly packed blob using this table's schema */
@@ -412,24 +417,24 @@ library TestData {
 
       _start = _end;
       _end += _encodedLengths.atIndex(0);
-      _table.name = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
+      _table.testString = (string(SliceLib.getSubslice(_blob, _start, _end).toBytes()));
 
       _start = _end;
       _end += _encodedLengths.atIndex(1);
-      _table.testUintArray = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint256());
+      _table.testUint32Array = (SliceLib.getSubslice(_blob, _start, _end).decodeArray_uint32());
     }
   }
 
   /** Tightly pack full data using this table's schema */
   function encode(
-    string memory name,
     uint32 testUint32,
-    uint256[] memory testUintArray,
-    bytes32 testBytes32
+    bytes32 testBytes32,
+    string memory testString,
+    uint32[] memory testUint32Array
   ) internal view returns (bytes memory) {
     uint40[] memory _counters = new uint40[](2);
-    _counters[0] = uint40(bytes(name).length);
-    _counters[1] = uint40(testUintArray.length * 32);
+    _counters[0] = uint40(bytes(testString).length);
+    _counters[1] = uint40(testUint32Array.length * 4);
     PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);
 
     return
@@ -437,8 +442,8 @@ library TestData {
         testUint32,
         testBytes32,
         _encodedLengths.unwrap(),
-        bytes((name)),
-        EncodeArray.encode((testUintArray))
+        bytes((testString)),
+        EncodeArray.encode((testUint32Array))
       );
   }
 
