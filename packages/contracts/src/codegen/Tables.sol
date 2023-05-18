@@ -5,3 +5,4 @@ pragma solidity >=0.8.0;
 
 import { Counter, CounterData, CounterTableId } from "./tables/Counter.sol";
 import { TestData, TestDataData, TestDataTableId } from "./tables/TestData.sol";
+import { TestKeyedData, TestKeyedDataData, TestKeyedDataTableId } from "./tables/TestKeyedData.sol";

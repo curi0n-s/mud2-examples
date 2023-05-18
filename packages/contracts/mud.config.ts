@@ -17,6 +17,15 @@ export default mudConfig({
         testString: "string",
         testUint32Array: "uint32[]",
       }
-    }
+    },
+    TestKeyedData: {
+      keySchema: {
+        id: "uint32",
+      },
+      schema: {
+        testUint32: "uint32",
+        testBytes32: "bytes32",
+      }
+    },
   },
 });

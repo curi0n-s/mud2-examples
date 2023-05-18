@@ -11,12 +11,11 @@ export const App = () => {
 
   const counter = useComponentValue(Counter, singletonEntity);
   const testData = useComponentValue(TestData, singletonEntity);
-  const testKeyedData = useComponentValue(TestKeyedData);
+  const testKeyedData = useComponentValue(TestKeyedData, { id: 0 });
 
-  let newKeyedData;
+  console.log("testKeyedData 0", testKeyedData?.[0]);
 
   const [recordId, setRecordId] = useState("");
-  const [testUint32Val, setTestUint32Val] = useState(0);
 
   return (
     <>
@@ -74,14 +73,13 @@ export const App = () => {
 
       <p>
         {/* get data from testKeyedData of key recordId */}
-        TestKeyedData testUint32: <span>{testUint32Val ?? "??"}</span>
+        TestKeyedData testUint32: <span>{testKeyedData?.[{ id: recordId }]?.testUint32 ?? "??" ?? "??"}</span>
       </p>
       <div>
         <input
           onChange={(event) => {
             event.preventDefault();
             setRecordId(event.target.value);
-            setTestUint32Val(testKeyedData?.[recordId]?.testUint32 ?? "??");
           }}
         />
       </div>
@@ -90,7 +88,6 @@ export const App = () => {
         onClick={async (event) => {
           event.preventDefault();
           await pushRecordToTestKeyedData(recordId);
-          setTestUint32Val(testKeyedData?.[recordId]?.testUint32 ?? "??");
         }}
       >
         Push Record by Key ID

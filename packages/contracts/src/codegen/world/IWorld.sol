@@ -7,11 +7,12 @@ import { IBaseWorld } from "@latticexyz/world/src/interfaces/IBaseWorld.sol";
 
 import { IIncrementSystem } from "./IIncrementSystem.sol";
 import { ITestDataSystem } from "./ITestDataSystem.sol";
+import { ITestKeyedDataSystem } from "./ITestKeyedDataSystem.sol";
 
 /**
  * The IWorld interface includes all systems dynamically added to the World
  * during the deploy process.
  */
-interface IWorld is IBaseWorld, IIncrementSystem, ITestDataSystem {
+interface IWorld is IBaseWorld, IIncrementSystem, ITestDataSystem, ITestKeyedDataSystem {
 
 }

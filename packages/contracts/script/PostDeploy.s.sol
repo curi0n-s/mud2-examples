@@ -31,6 +31,10 @@ contract PostDeploy is Script {
     uint32 testUint32 = IWorld(worldAddress).pushRecordToTestData();
     console.log("Pushed record to TestData:", testUint32);
 
+    // keyed data testing
+    uint32 testUint32FromKeyed = IWorld(worldAddress).pushRecordToTestKeyedData(0);
+    console.log("Pushed record to TestKeyedData:", testUint32FromKeyed);
+
     vm.stopBroadcast();
   }
 }

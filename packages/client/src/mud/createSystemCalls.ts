@@ -7,7 +7,7 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
   { worldSend, txReduced$, singletonEntity }: SetupNetworkResult,
-  { Counter, TestData }: ClientComponents
+  { Counter, TestData, TestKeyedData }: ClientComponents
 ) {
   const increment = async () => {
     const tx = await worldSend("increment", []);
@@ -27,9 +27,16 @@ export function createSystemCalls(
     return getComponentValue(TestData, singletonEntity);
   };
 
+  const pushRecordToTestKeyedData = async (id: number) => {
+    const tx = await worldSend("pushRecordToTestKeyedData", [id]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(TestKeyedData, { id });
+  };
+
   return {
     increment,
     incrementSquared,
     pushRecordToTestData,
+    pushRecordToTestKeyedData,
   };
 }

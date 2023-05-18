@@ -39,5 +39,21 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    TestKeyedData: (() => {
+      const tableId = new TableId("", "TestKeyedData");
+      return defineComponent(
+        world,
+        {
+          testUint32: RecsType.Number,
+          testBytes32: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
   };
 }
