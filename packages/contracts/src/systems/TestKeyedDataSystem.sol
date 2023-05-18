@@ -12,7 +12,6 @@ contract TestKeyedDataSystem is System {
             TestKeyedData: {
             keySchema: {
                 id: "uint32",
-                address: "address",
             },
             schema: {
                 testUint32: "uint32",

@@ -104,7 +104,7 @@ export const App = () => {
 
       <p>
         {/* get data from testKeyedData of key recordId */}
-        TestKeyedData testUint32: <span>{testKeyedData2?.value.1testUint32 ?? "??" ?? "??"}</span>
+        TestKeyedData testUint32: <span>{testKeyedData2?.value.testUint32 ?? "??" ?? "??"}</span>
       </p>
       <div>
         <input
