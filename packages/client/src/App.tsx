@@ -67,6 +67,7 @@ export const App = () => {
   console.log("schemeType bytes32", SchemaType.BYTES32); //95
 
   //https://github.com/latticexyz/mud/blob/641d0d35912622c99fcbb347b0c0af15efc0ad11/examples/minimal/packages/contracts/types/ethers-contracts/IWorld.ts#LL975C1-L990C37
+  // working example of creating a table
   const createTable = async () => {
     await worldSend("registerTable", [
       namespace, //namespace
@@ -76,6 +77,7 @@ export const App = () => {
     ]);
   };
 
+  //not working yet
   const createFieldInTable = async () => {
     await worldSend("setField", [
       namespace, //namespace
@@ -85,6 +87,7 @@ export const App = () => {
     ]);
   };
 
+  //not working yet
   const createRecordInTable = async () => {
     await worldSend("setRecord", [
       namespace, //namespace
