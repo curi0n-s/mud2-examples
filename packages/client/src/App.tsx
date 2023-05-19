@@ -14,6 +14,7 @@ export const App = () => {
     world,
   } = useMUD();
   const [recordId, setRecordId] = useState(0);
+  const [stringInput, setStringInput] = useState("");
 
   //===================================================================================================
   // ACCESSING TABLES
@@ -60,7 +61,7 @@ export const App = () => {
 
   const namespace = stringToBytes16("Test");
   console.log("namespace", namespace);
-  const tableName = stringToBytes16("CreatedTable5");
+  const tableName = stringToBytes16(stringInput);
 
   //checking schema types for adding them in UI dynamically
   console.log("schemeType uint256", SchemaType.UINT256); //31
@@ -98,7 +99,8 @@ export const App = () => {
   };
 
   const getTableSchema = async () => {
-    await worldSend("getSchema", [stringToBytes16(tableName)]);
+    await worldSend("getSchema", [tableName]);
+    console.log("schema", schema);
   };
 
   //===================================================================================================
@@ -189,6 +191,12 @@ export const App = () => {
       </button>
 
       <div>
+        <input
+          onChange={(event) => {
+            event.preventDefault();
+            setStringInput(event.target.value);
+          }}
+        />
         <button
           type="button"
           onClick={async (event) => {
@@ -220,7 +228,7 @@ export const App = () => {
           type="button"
           onClick={async (event) => {
             event.preventDefault();
-            console.log(await getTableSchema());
+            console.log(getTableSchema());
           }}
         >
           getTableSchema

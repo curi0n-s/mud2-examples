@@ -21,6 +21,12 @@ contract PostDeploy is Script {
 
     // Call increment on the world via the registered function selector
     // IWorld(worldAddress).registerNamespace("mud")
+
+    // IWorld(worldAddress).grantAccess(
+    //   stringToBytes16("test"),
+    //   stringToBytes16("test"),
+    //   msg.sender
+    // );
     
     uint32 newValue = IWorld(worldAddress).increment();
     console.log("Increment via IWorld:", newValue);
@@ -60,5 +66,16 @@ contract PostDeploy is Script {
 
     vm.stopBroadcast();
 
+
+
+
+  }
+
+  function stringToBytes16(string memory input) public pure returns (bytes16) {
+      bytes16 output;
+      assembly {
+          output := mload(add(input, 32))
+      }
+      return output;
   }
 }

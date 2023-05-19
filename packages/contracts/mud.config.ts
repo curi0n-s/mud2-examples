@@ -1,10 +1,19 @@
 import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
-  // namespace: "mud",
+  // namespace: "test",
+  // name: "test",
   systems: {
     IncrementSystem: {
       name : "IncrementSystem",
+      openAccess: true,
+    },
+    TestDataSystem: {
+      name : "TestDataSystem",
+      openAccess: true,
+    },
+    TestKeyedDataSystem: {
+      name : "TKDSystem",
       openAccess: true,
     },
   },
