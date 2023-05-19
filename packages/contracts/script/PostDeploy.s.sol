@@ -36,5 +36,11 @@ contract PostDeploy is Script {
     console.log("Pushed record to TestKeyedData:", testUint32FromKeyed);
 
     vm.stopBroadcast();
+
+    vm.startBroadcast(vm.envUint("PRIVATE_KEY2"));
+      //create new namespace?
+
+    vm.stopBroadcast();
+
   }
 }

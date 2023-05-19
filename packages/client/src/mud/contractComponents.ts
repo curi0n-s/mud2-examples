@@ -6,7 +6,7 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 export function defineContractComponents(world: World) {
   return {
     Counter: (() => {
-      const tableId = new TableId("", "Counter");
+      const tableId = new TableId("Test1", "Counter");
       return defineComponent(
         world,
         {
@@ -22,7 +22,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     TestData: (() => {
-      const tableId = new TableId("", "TestData");
+      const tableId = new TableId("Test1", "TestData");
       return defineComponent(
         world,
         {
@@ -40,7 +40,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     TestKeyedData: (() => {
-      const tableId = new TableId("", "TestKeyedData");
+      const tableId = new TableId("Test1", "TestKeyedData");
       return defineComponent(
         world,
         {
