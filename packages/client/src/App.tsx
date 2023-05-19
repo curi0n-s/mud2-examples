@@ -1,6 +1,8 @@
 //@ts-nocheck
 import { useComponentValue, useRow, useEntityQuery } from "@latticexyz/react";
 import { Has, HasValue, getComponentValueStrict } from "@latticexyz/recs";
+import { stringToBytes16 } from "@latticexyz/utils";
+import { encodeSchema, SchemaType } from "@latticexyz/schema-type";
 import { useMUD } from "./MUDContext";
 import { useState } from "react";
 
@@ -8,10 +10,14 @@ export const App = () => {
   const {
     components: { Counter, TestData, TestKeyedData },
     systemCalls: { increment, incrementSquared, pushRecordToTestData, pushRecordToTestKeyedData },
-    network: { singletonEntity, storeCache },
+    network: { singletonEntity, storeCache, worldSend },
     world,
   } = useMUD();
   const [recordId, setRecordId] = useState(0);
+
+  //===================================================================================================
+  // ACCESSING TABLES
+  //===================================================================================================
 
   // Access components either via ECS or via useRow as shown in the livestream
   // ECS queries can find by value, useRow can also find by key
@@ -45,6 +51,52 @@ export const App = () => {
   console.log("testKeyedData2", testKeyedData2);
   console.log("testKeyedData2.testUint32", testKeyedData2?.value?.testUint32);
 
+  //===================================================================================================
+  // FUNCTIONS TO CREATE NEW TABLES / SCHEMAS
+  //===================================================================================================
+
+  const defineSchema = async () => {};
+
+  const namespace = stringToBytes16("Test");
+  console.log("namespace", namespace);
+  const tableName = stringToBytes16("CreatedTable5");
+
+  //https://github.com/latticexyz/mud/blob/641d0d35912622c99fcbb347b0c0af15efc0ad11/examples/minimal/packages/contracts/types/ethers-contracts/IWorld.ts#LL975C1-L990C37
+  const createTable = async () => {
+    await worldSend("registerTable", [
+      namespace, //namespace
+      tableName, //tableName
+      encodeSchema([SchemaType.UINT256]), //value schema
+      encodeSchema([SchemaType.BYTES32]), //key schema
+    ]);
+  };
+
+  const createFieldInTable = async () => {
+    await worldSend("setField", [
+      namespace, //namespace
+      tableName, //tableName
+      [stringToBytes16("CreatedKey1")], //key
+      0, //schemaIndex
+    ]);
+  };
+
+  const createRecordInTable = async () => {
+    await worldSend("setRecord", [
+      namespace, //namespace
+      tableName, //tableName
+      [stringToBytes16("abcd")],
+      //bytes
+    ]);
+  };
+
+  const getTableSchema = async () => {
+    await worldSend("getSchema", [stringToBytes16(tableName)]);
+  };
+
+  //===================================================================================================
+  // UI
+  //===================================================================================================
+
   return (
     <>
       <div>
@@ -70,7 +122,7 @@ export const App = () => {
       <button
         type="button"
         onClick={async (event) => {
-          // event.preventDefault();
+          event.preventDefault();
           console.log("new counter value:", await incrementSquared());
         }}
       >
@@ -96,7 +148,7 @@ export const App = () => {
       <button
         type="button"
         onClick={async (event) => {
-          // event.preventDefault();
+          event.preventDefault();
           console.log("testData record testUint32:", await pushRecordToTestData());
         }}
       >
@@ -127,6 +179,45 @@ export const App = () => {
       >
         Push Record by Key ID
       </button>
+
+      <div>
+        <button
+          type="button"
+          onClick={async (event) => {
+            event.preventDefault();
+            await createTable();
+          }}
+        >
+          createTable
+        </button>
+        <button
+          type="button"
+          onClick={async (event) => {
+            event.preventDefault();
+            await createFieldInTable();
+          }}
+        >
+          createFieldInTable
+        </button>
+        <button
+          type="button"
+          onClick={async (event) => {
+            event.preventDefault();
+            await createRecordInTable();
+          }}
+        >
+          createRecordInTable
+        </button>
+        <button
+          type="button"
+          onClick={async (event) => {
+            event.preventDefault();
+            console.log(await getTableSchema());
+          }}
+        >
+          getTableSchema
+        </button>
+      </div>
     </>
   );
 };
