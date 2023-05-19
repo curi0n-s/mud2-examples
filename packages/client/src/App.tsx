@@ -55,11 +55,16 @@ export const App = () => {
   // FUNCTIONS TO CREATE NEW TABLES / SCHEMAS
   //===================================================================================================
 
-  const defineSchema = async () => {};
+  const defineKeys = () => {};
+  const defineVaules = () => {};
 
   const namespace = stringToBytes16("Test");
   console.log("namespace", namespace);
   const tableName = stringToBytes16("CreatedTable5");
+
+  //checking schema types for adding them in UI dynamically
+  console.log("schemeType uint256", SchemaType.UINT256); //31
+  console.log("schemeType bytes32", SchemaType.BYTES32); //95
 
   //https://github.com/latticexyz/mud/blob/641d0d35912622c99fcbb347b0c0af15efc0ad11/examples/minimal/packages/contracts/types/ethers-contracts/IWorld.ts#LL975C1-L990C37
   const createTable = async () => {
