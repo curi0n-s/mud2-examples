@@ -1,0 +1,53 @@
+Arguments: 
+  /home/curion/.nvm/versions/node/v18.0.0/bin/node /home/curion/.yarn/bin/yarn.js add typescript
+
+PATH: 
+  /home/curion/.nvm/versions/node/v18.0.0/bin:/home/curion/.local/share/solana/install/active_release/bin:/home/curion/.npm-global/bin:/home/curion/.local/bin:/home/curion/bin:/home/curion/.yarn/bin:/home/curion/.config/yarn/global/node_modules/.bin:/home/curion/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/c/Python39/Scripts/:/mnt/c/Python39/:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/c/Program Files/Common Files/Oracle/Java/javapath:/mnt/c/Program Files (x86)/Common Files/Oracle/Java/javapath:/mnt/c/Program Files/Oculus/Support/oculus-runtime:/mnt/c/Users/crdan/miniconda3:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.0/bin:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.0/libnvvp:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/:/mnt/c/Windows/System32/OpenSSH/:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA NvDLISR:/mnt/c/Program Files (x86)/Windows Kits/8.1/Windows Performance Toolkit/:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.0/extras/CUPTI/libx64:/mnt/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v10.0/include:/mnt/c/tools/cuda/bin:/mnt/c/tools/TensorRT-5.0.4.3:/mnt/c/Program Files (x86)/Microsoft Visual Studio/Shared/Python37_64:/mnt/c/Users/crdan/miniconda3/Scripts:/mnt/c/Users/crdan/AppData/Roaming/Python/Python37/Scripts:/mnt/c/tools/curl-7.76.1-win64-mingw/bin:/mnt/c/Program Files/nodejs/:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/VcXsrv:/mnt/c/Program Files/Git/cmd:/mnt/c/Program Files/Go/bin:/mnt/c/Users/crdan/Desktop/youtube-dl:/mnt/c/Users/crdan/go-ipfs:/mnt/c/Program Files/dotnet/:/mnt/c/Program Files/MATLAB/R2022a/bin:/mnt/c/Users/crdan/Desktop/okteto/okteto.exe:/mnt/c/Program Files/Docker/Docker/resources/bin:/mnt/c/MinGW/bin:/mnt/c/cygwin64/bin:/mnt/c/Program Files/Microsoft SQL Server/150/Tools/Binn/:/mnt/c/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/:/mnt/c/Users/crdan/scoop/shims:/mnt/c/Users/crdan/miniconda3/Library/mingw-w64/bin:/mnt/c/Users/crdan/miniconda3/Library/usr/bin:/mnt/c/Users/crdan/miniconda3/Library/bin:/mnt/c/Users/crdan/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/crdan/AppData/Local/Programs/IPFS Desktop/resources/app.asar.unpacked/src/ipfs-on-path/scripts/bin-win:/mnt/c/Users/crdan/AppData/Local/GitHubDesktop/bin:/mnt/c/Users/crdan/AppData/Roaming/npm:/mnt/c/Users/crdan/AppData/Local/Programs/Microsoft VS Code/bin:/mnt/c/Users/crdan/go/bin:/mnt/c/ProgramData/crdan/GitHubDesktop/bin:/mnt/c/Users/crdan/.dotnet/tools:/snap/bin:/home/curion/.foundry/bin
+
+Yarn version: 
+  1.22.18
+
+Node version: 
+  18.0.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, copyfile '/home/curion/.cache/yarn/v6/npm-glob-8.1.0-d388f656593ef708ee3e34640fdfb99a9fd1c33e-integrity/node_modules/glob/LICENSE' -> '/home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/@latticexyz/cli/node_modules/glob/LICENSE'
+
+npm manifest: 
+  {
+    "name": "mud-template-react",
+    "private": true,
+    "scripts": {
+      "build": "pnpm recursive run build",
+      "dev": "concurrently -n contracts,client -c cyan,magenta 'cd packages/contracts && pnpm run dev' 'cd packages/client && pnpm run dev'",
+      "dev:client": "pnpm --filter 'client' run dev",
+      "dev:contracts": "pnpm --filter 'contracts' dev",
+      "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
+      "initialize": "pnpm recursive run initialize",
+      "mud:up": "pnpm recursive exec mud set-version -v canary && pnpm install",
+      "prepare": "(forge --version || pnpm foundry:up)",
+      "test": "pnpm recursive run test"
+    },
+    "devDependencies": {
+      "@latticexyz/cli": "2.0.0-alpha.1.148+85e38ba8",
+      "@typescript-eslint/eslint-plugin": "5.46.1",
+      "@typescript-eslint/parser": "5.46.1",
+      "concurrently": "^8.0.1",
+      "eslint": "8.29.0",
+      "rimraf": "^3.0.2",
+      "typescript": "^4.9.5"
+    },
+    "engines": {
+      "node": "18.x",
+      "pnpm": "8.x"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

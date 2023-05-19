@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { useComponentValue, useRow, useEntityQuery } from "@latticexyz/react";
 import { Has, HasValue, getComponentValueStrict } from "@latticexyz/recs";
 import { useMUD } from "./MUDContext";
@@ -10,7 +11,7 @@ export const App = () => {
     network: { singletonEntity, storeCache },
     world,
   } = useMUD();
-  const [recordId, setRecordId] = useState(1);
+  const [recordId, setRecordId] = useState(0);
 
   // Access components either via ECS or via useRow as shown in the livestream
   // ECS queries can find by value, useRow can also find by key
@@ -36,13 +37,13 @@ export const App = () => {
 
   const tableInstances = matchingEntities.map((testEntity) => getComponentValueStrict(TestKeyedData, testEntity));
   console.log("tableInstance", tableInstances);
-  console.log("tableInstances[1].testUint32", tableInstances[0].testUint32);
+  // console.log("tableInstances[1].testUint32", tableInstances[0].testUint32);
 
   //get table row by key (id)
 
   const testKeyedData2 = useRow(storeCache, { table: "TestKeyedData", key: { id: Number(recordId) } });
   console.log("testKeyedData2", testKeyedData2);
-  console.log("testKeyedData2.testUint32", testKeyedData2?.value.testUint32);
+  console.log("testKeyedData2.testUint32", testKeyedData2?.value?.testUint32);
 
   return (
     <>
@@ -104,7 +105,10 @@ export const App = () => {
 
       <p>
         {/* get data from testKeyedData of key recordId */}
-        TestKeyedData testUint32: <span>{testKeyedData2?.value.testUint32 ?? "??" ?? "??"}</span>
+        TestKeyedData testUint32: <span>{testKeyedData2?.value?.testUint32 ?? "??" ?? "??"}</span>
+      </p>
+      <p>
+        TestKeyedData testBytes32: <span>{testKeyedData2?.value?.testBytes32 ?? "??"}</span>
       </p>
       <div>
         <input
