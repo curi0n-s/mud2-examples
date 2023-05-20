@@ -1,8 +1,8 @@
 import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
-  // namespace: "test",
-  // name: "test",
+  // namespace: "root",
+  name: "test",
   systems: {
     IncrementSystem: {
       name : "IncrementSystem",
@@ -14,6 +14,10 @@ export default mudConfig({
     },
     TestKeyedDataSystem: {
       name : "TKDSystem",
+      openAccess: true,
+    },
+    Grid2DSystem: {
+      name : "Grid2DSystem",
       openAccess: true,
     },
   },
@@ -43,5 +47,44 @@ export default mudConfig({
         testBytes32: "bytes32",
       }
     },
+    Grid2D: {
+      keySchema: {
+        x: "uint32",
+        y: "uint32",
+      },
+      schema: {
+        isOccupied: "bool",
+        data: "bytes",
+        author: "address",
+      }
+    },
+    Grid2DTags: {
+      keySchema: {
+        x: "uint32",
+        y: "uint32",
+      },
+      schema: {
+        tags: "uint32",
+        taggers: "address[]",
+      }
+    },
+    Grid2DTagger: {
+      keySchema: {
+        tagger: "address",
+      },
+      schema: {
+        tagX: "uint32[]",
+        tagY: "uint32[]",
+        timestamp: "uint128[]",
+      }
+    },
+    GridConstants: {
+      keySchema: {},
+      schema: {
+        width: "uint32",
+        height: "uint32",
+      }
+    },
   },
+
 });

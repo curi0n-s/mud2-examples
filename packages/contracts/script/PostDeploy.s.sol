@@ -18,6 +18,7 @@ contract PostDeploy is Script {
     vm.startBroadcast(deployerPrivateKey);
 
     // ------------------ EXAMPLES ------------------
+    //Presumably this has to operate on the root namespace
 
     // Call increment on the world via the registered function selector
     // IWorld(worldAddress).registerNamespace("mud")
@@ -33,31 +34,44 @@ contract PostDeploy is Script {
 
     uint32 newValueSquared = IWorld(worldAddress).incrementSquared();
     console.log("Increment squared via IWorld:", newValueSquared);
+   
+    // // create new table
+    // bytes16 table = stringToBytes16("testTable");
+    // bytes16 namespace = stringToBytes16("testNamespace");
+    // bytes32 tableId = IWorld(worldAddress).registerTable( 
+    //   namespace,
+    //   table, 
+    //   SchemaLib.encode(SchemaType.BYTES32),
+    //   SchemaLib.encode(SchemaType.BYTES32)
+    // );
 
-    // Call pushRecordToTestData
-    uint32[] memory testArray = new uint32[](3);
-    testArray[0] = 1;
-    testArray[1] = 2;
-    testArray[2] = 3;
-    IWorld(worldAddress).setInitialArray(testArray);
-    uint32 testUint32 = IWorld(worldAddress).pushRecordToTestData();
-    console.log("Pushed record to TestData:", testUint32);
+    // console.log("New table selector:", bytes32ToString(tableId));
 
-    // keyed data testing
-    uint32 testUint32FromKeyed = IWorld(worldAddress).pushRecordToTestKeyedData(0);
-    console.log("Pushed record to TestKeyedData:", testUint32FromKeyed);
+    // //setField via name, via tableId
+    // bytes32[] memory key = new bytes32[](0);
+    // key[0]= "testKey";
 
-    // //create new schema (does not create new table)
-    // Schema keySchema = SchemaLib.encode(SchemaType.UINT256);
-    // Schema schema = SchemaLib.encode(SchemaType.UINT256, SchemaType.UINT256);
-    // bytes32 table = keccak256("MyTable");
-    // IWorld(worldAddress).registerSchema(table, schema, keySchema);
-    // // Setting metadata is optional. It helps off-chain actors name columns
-    // string[] memory fieldNames = new string[](2);
-    // fieldNames[0] = "field1";
-    // fieldNames[1] = "field2";
-    // IWorld(worldAddress).setMetadata(table, "MyTable", fieldNames);
+    // IWorld(worldAddress).setField(
+    //   namespace,
+    //   table,
+    //   key,
+    //   0,
+    //   abi.encodePacked(true)
+    // );
 
+    // IWorld(worldAddress).setField(
+    //   tableId, 
+    //   key, 
+    //   0, 
+    //   abi.encodePacked(false)
+    // );
+
+
+    //get(world, tableId)
+
+    //setMetadata
+
+    //set
 
     vm.stopBroadcast();
 
@@ -78,4 +92,13 @@ contract PostDeploy is Script {
       }
       return output;
   }
+
+  function bytes32ToString(bytes32 value) public pure returns (string memory) {
+      bytes memory bytesArray = new bytes(32);
+      for (uint256 i = 0; i < 32; i++) {
+          bytesArray[i] = value[i];
+      }
+      return string(bytesArray);
+  }
+
 }

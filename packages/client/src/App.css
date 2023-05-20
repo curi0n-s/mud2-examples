@@ -1,0 +1,14 @@
+.grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-row {
+  display: flex;
+}
+
+.grid-cell {
+  width: 50px; /* or any size you want */
+  height: 50px; /* or any size you want */
+  border: 1px solid black;
+}

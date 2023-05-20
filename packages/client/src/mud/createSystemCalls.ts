@@ -7,7 +7,7 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
   { worldSend, txReduced$, singletonEntity }: SetupNetworkResult,
-  { Counter, TestData, TestKeyedData }: ClientComponents
+  { Counter, TestData, TestKeyedData, Grid2D, Grid2DTags, Grid2DTagger, GridConstants }: ClientComponents
 ) {
   const increment = async () => {
     const tx = await worldSend("increment", []);
@@ -33,10 +33,24 @@ export function createSystemCalls(
     return getComponentValue(TestKeyedData, { id });
   };
 
+  const setGridPointData = async (x: number, y: number, isOccupied: boolean, data: string, author: string) => {
+    const tx = await worldSend("setGridPointData", [x, y, isOccupied, data, author]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(Grid2D, { x, y });
+  };
+
+  const setGridLimit = async (x: number, y: number) => {
+    const tx = await worldSend("setLimits", [x, y]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(GridConstants, singletonEntity);
+  };
+
   return {
     increment,
     incrementSquared,
     pushRecordToTestData,
     pushRecordToTestKeyedData,
+    setGridPointData,
+    setGridLimit,
   };
 }

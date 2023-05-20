@@ -55,5 +55,71 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
+    Grid2D: (() => {
+      const tableId = new TableId("", "Grid2D");
+      return defineComponent(
+        world,
+        {
+          isOccupied: RecsType.Boolean,
+          data: RecsType.String,
+          author: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Grid2DTags: (() => {
+      const tableId = new TableId("", "Grid2DTags");
+      return defineComponent(
+        world,
+        {
+          tags: RecsType.Number,
+          taggers: RecsType.StringArray,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    Grid2DTagger: (() => {
+      const tableId = new TableId("", "Grid2DTagger");
+      return defineComponent(
+        world,
+        {
+          tagX: RecsType.NumberArray,
+          tagY: RecsType.NumberArray,
+          timestamp: RecsType.BigIntArray,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    GridConstants: (() => {
+      const tableId = new TableId("", "GridConstants");
+      return defineComponent(
+        world,
+        {
+          width: RecsType.Number,
+          height: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
   };
 }
