@@ -103,7 +103,7 @@ export const App = () => {
   const defineKeys = () => {};
   const defineVaules = () => {};
 
-  const namespace = stringToBytes16(stringInput);
+  const namespace = "0x00"; //stringToBytes16(stringInput);
   console.log("world", worldContract.address);
   console.log("namespace", namespace);
   const tableName = stringToBytes16(stringInput);

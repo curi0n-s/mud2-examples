@@ -28,12 +28,22 @@ contract PostDeploy is Script {
     //   stringToBytes16("test"),
     //   msg.sender
     // );
-    
-    uint32 newValue = IWorld(worldAddress).increment();
-    console.log("Increment via IWorld:", newValue);
 
-    uint32 newValueSquared = IWorld(worldAddress).incrementSquared();
-    console.log("Increment squared via IWorld:", newValueSquared);
+    /**
+    ON NAMESPACES AND FUNCTION CALLS:
+      for all namespaces except the root namespace the function selector that is registered for the system is 
+      <namespace>_<system>_<funcSelector> (for the root namespace it's just funcSelector)
+      so as an example, if you register the IncrementSystem in the foo namespace,  
+      your IncrementSystem.increment() function would be registered as World.foo_IncrementSystem_increment()
+     */
+
+    // uint32 newValue = IWorld(worldAddress).increment();
+    // uint32 newValue = IWorld(worldAddress).testing_IncrementSystem_increment();
+
+    // console.log("Increment via IWorld:", newValue);
+
+    // uint32 newValueSquared = IWorld(worldAddress).testing_IncrementSystem_incrementSquared();
+    // console.log("Increment squared via IWorld:", newValueSquared);
    
     // // create new table
     // bytes16 table = stringToBytes16("testTable");

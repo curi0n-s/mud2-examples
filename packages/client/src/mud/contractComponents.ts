@@ -6,7 +6,7 @@ import { defineComponent, Type as RecsType, World } from "@latticexyz/recs";
 export function defineContractComponents(world: World) {
   return {
     Counter: (() => {
-      const tableId = new TableId("", "Counter");
+      const tableId = new TableId("testing", "Counter");
       return defineComponent(
         world,
         {
@@ -22,7 +22,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     TestData: (() => {
-      const tableId = new TableId("", "TestData");
+      const tableId = new TableId("testing", "TestData");
       return defineComponent(
         world,
         {
@@ -40,7 +40,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     TestKeyedData: (() => {
-      const tableId = new TableId("", "TestKeyedData");
+      const tableId = new TableId("testing", "TestKeyedData");
       return defineComponent(
         world,
         {
@@ -56,7 +56,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Grid2D: (() => {
-      const tableId = new TableId("", "Grid2D");
+      const tableId = new TableId("testing", "Grid2D");
       return defineComponent(
         world,
         {
@@ -73,7 +73,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Grid2DTags: (() => {
-      const tableId = new TableId("", "Grid2DTags");
+      const tableId = new TableId("testing", "Grid2DTags");
       return defineComponent(
         world,
         {
@@ -89,7 +89,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     Grid2DTagger: (() => {
-      const tableId = new TableId("", "Grid2DTagger");
+      const tableId = new TableId("testing", "Grid2DTagger");
       return defineComponent(
         world,
         {
@@ -106,7 +106,7 @@ export function defineContractComponents(world: World) {
       );
     })(),
     GridConstants: (() => {
-      const tableId = new TableId("", "GridConstants");
+      const tableId = new TableId("testing", "GridConstants");
       return defineComponent(
         world,
         {

@@ -1,7 +1,7 @@
 import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
-  // namespace: "root",
+  namespace: "testing",
   name: "test",
   systems: {
     IncrementSystem: {

@@ -8,7 +8,13 @@ import { Grid2DData } from "./../Tables.sol";
 interface IGrid2DSystem {
   error Unauthorized();
 
-  function setGridPointData(uint32 x, uint32 y, bool isOccupied, bytes memory data, address author) external;
+  function testing_Grid2DSystem_setGridPointData(
+    uint32 x,
+    uint32 y,
+    bool isOccupied,
+    bytes memory data,
+    address author
+  ) external;
 
-  function setGridPointData(uint32 x, uint32 y, Grid2DData memory data) external;
+  function testing_Grid2DSystem_setGridPointData(uint32 x, uint32 y, Grid2DData memory data) external;
 }
