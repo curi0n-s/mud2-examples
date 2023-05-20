@@ -61,8 +61,8 @@ export function defineContractComponents(world: World) {
         world,
         {
           isOccupied: RecsType.Boolean,
-          data: RecsType.String,
           author: RecsType.String,
+          data: RecsType.String,
         },
         {
           metadata: {

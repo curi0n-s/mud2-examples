@@ -44,6 +44,12 @@ contract PostDeploy is Script {
 
     // uint32 newValueSquared = IWorld(worldAddress).testing_IncrementSystem_incrementSquared();
     // console.log("Increment squared via IWorld:", newValueSquared);
+    uint32[] memory uint32Array = new uint32[](3);
+    uint32Array[0] = 1;
+    uint32Array[1] = 2;
+    uint32Array[2] = 3;
+    IWorld(worldAddress).testing_TestDataSystem_setInitialArray(uint32Array);
+    IWorld(worldAddress).testing_TestDataSystem_pushRecordToTestData();
    
     // // create new table
     // bytes16 table = stringToBytes16("testTable");

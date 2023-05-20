@@ -10,7 +10,7 @@ import "./App.css";
 
 export const App = () => {
   const {
-    components: { Counter, TestData, TestKeyedData, Grid2D },
+    components: { Counter, TestData, TestKeyedData, Grid2D, GridConstants },
     systemCalls: {
       increment,
       incrementSquared,
@@ -103,7 +103,7 @@ export const App = () => {
   const defineKeys = () => {};
   const defineVaules = () => {};
 
-  const namespace = "0x00"; //stringToBytes16(stringInput);
+  const namespace = stringToBytes16(stringInput);
   console.log("world", worldContract.address);
   console.log("namespace", namespace);
   const tableName = stringToBytes16(stringInput);
@@ -174,10 +174,12 @@ export const App = () => {
 
   return (
     <>
+      <h1>Basic Examples</h1>
+      <h2>Push new record to table (overwrite old record)</h2>
       <div>
-        Counter: <span>{counter?.counterValue ?? "??"}</span>
         <p>
-          Counter2: <span>{counter2?.value.counterValue ?? "??"}</span>
+          Counter: <span>{counter?.counterValue ?? "??"}</span>, Counter2:{" "}
+          <span>{counter2?.value.counterValue ?? "??"}</span>
         </p>
       </div>
 
@@ -190,7 +192,7 @@ export const App = () => {
       >
         Increment
       </button>
-
+      <p></p>
       <div>
         Counter: <span>{counter?.counterValueSquared ?? "??"}</span>
       </div>
@@ -203,7 +205,8 @@ export const App = () => {
       >
         Increment
       </button>
-
+      <p></p>
+      <h2>Push new record to table (overwrite old record)</h2>
       <div>
         <p>
           TestData testUint32: <span>{testData?.testUint32 ?? "??"}</span>
@@ -230,6 +233,9 @@ export const App = () => {
         Push Record
       </button>
 
+      <p></p>
+      <h2>Add record to table by id</h2>
+
       <p>
         {/* get data from testKeyedData of key recordId */}
         TestKeyedData testUint32: <span>{testKeyedData2?.value?.testUint32 ?? "??" ?? "??"}</span>
@@ -244,17 +250,19 @@ export const App = () => {
             setRecordId(event.target.value);
           }}
         />
+        <button
+          type="button"
+          onClick={async (event) => {
+            event.preventDefault();
+            await pushRecordToTestKeyedData(recordId);
+          }}
+        >
+          Push Record by Key ID
+        </button>
       </div>
-      <button
-        type="button"
-        onClick={async (event) => {
-          event.preventDefault();
-          await pushRecordToTestKeyedData(recordId);
-        }}
-      >
-        Push Record by Key ID
-      </button>
 
+      <p></p>
+      <h2>Create table with input = namespace name</h2>
       <div>
         <input
           onChange={(event) => {

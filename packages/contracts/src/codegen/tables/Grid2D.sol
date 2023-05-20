@@ -22,8 +22,8 @@ bytes32 constant Grid2DTableId = _tableId;
 
 struct Grid2DData {
   bool isOccupied;
-  bytes data;
   address author;
+  bytes data;
 }
 
 library Grid2D {
@@ -31,8 +31,8 @@ library Grid2D {
   function getSchema() internal pure returns (Schema) {
     SchemaType[] memory _schema = new SchemaType[](3);
     _schema[0] = SchemaType.BOOL;
-    _schema[1] = SchemaType.BYTES;
-    _schema[2] = SchemaType.ADDRESS;
+    _schema[1] = SchemaType.ADDRESS;
+    _schema[2] = SchemaType.BYTES;
 
     return SchemaLib.encode(_schema);
   }
@@ -49,8 +49,8 @@ library Grid2D {
   function getMetadata() internal pure returns (string memory, string[] memory) {
     string[] memory _fieldNames = new string[](3);
     _fieldNames[0] = "isOccupied";
-    _fieldNames[1] = "data";
-    _fieldNames[2] = "author";
+    _fieldNames[1] = "author";
+    _fieldNames[2] = "data";
     return ("Grid2D", _fieldNames);
   }
 
@@ -114,145 +114,13 @@ library Grid2D {
     _store.setField(_tableId, _keyTuple, 0, abi.encodePacked((isOccupied)));
   }
 
-  /** Get data */
-  function getData(uint32 x, uint32 y) internal view returns (bytes memory data) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
-    return (bytes(_blob));
-  }
-
-  /** Get data (using the specified store) */
-  function getData(IStore _store, uint32 x, uint32 y) internal view returns (bytes memory data) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
-    return (bytes(_blob));
-  }
-
-  /** Set data */
-  function setData(uint32 x, uint32 y, bytes memory data) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    StoreSwitch.setField(_tableId, _keyTuple, 1, bytes((data)));
-  }
-
-  /** Set data (using the specified store) */
-  function setData(IStore _store, uint32 x, uint32 y, bytes memory data) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    _store.setField(_tableId, _keyTuple, 1, bytes((data)));
-  }
-
-  /** Get the length of data */
-  function lengthData(uint32 x, uint32 y) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 1, getSchema());
-    return _byteLength / 1;
-  }
-
-  /** Get the length of data (using the specified store) */
-  function lengthData(IStore _store, uint32 x, uint32 y) internal view returns (uint256) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 1, getSchema());
-    return _byteLength / 1;
-  }
-
-  /** Get an item of data (unchecked, returns invalid data if index overflows) */
-  function getItemData(uint32 x, uint32 y, uint256 _index) internal view returns (bytes memory) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 1, getSchema(), _index * 1, (_index + 1) * 1);
-    return (bytes(_blob));
-  }
-
-  /** Get an item of data (using the specified store) (unchecked, returns invalid data if index overflows) */
-  function getItemData(IStore _store, uint32 x, uint32 y, uint256 _index) internal view returns (bytes memory) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 1, getSchema(), _index * 1, (_index + 1) * 1);
-    return (bytes(_blob));
-  }
-
-  /** Push a slice to data */
-  function pushData(uint32 x, uint32 y, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    StoreSwitch.pushToField(_tableId, _keyTuple, 1, bytes((_slice)));
-  }
-
-  /** Push a slice to data (using the specified store) */
-  function pushData(IStore _store, uint32 x, uint32 y, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    _store.pushToField(_tableId, _keyTuple, 1, bytes((_slice)));
-  }
-
-  /** Pop a slice from data */
-  function popData(uint32 x, uint32 y) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    StoreSwitch.popFromField(_tableId, _keyTuple, 1, 1);
-  }
-
-  /** Pop a slice from data (using the specified store) */
-  function popData(IStore _store, uint32 x, uint32 y) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    _store.popFromField(_tableId, _keyTuple, 1, 1);
-  }
-
-  /** Update a slice of data at `_index` */
-  function updateData(uint32 x, uint32 y, uint256 _index, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    StoreSwitch.updateInField(_tableId, _keyTuple, 1, _index * 1, bytes((_slice)));
-  }
-
-  /** Update a slice of data (using the specified store) at `_index` */
-  function updateData(IStore _store, uint32 x, uint32 y, uint256 _index, bytes memory _slice) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = bytes32(uint256((x)));
-    _keyTuple[1] = bytes32(uint256((y)));
-
-    _store.updateInField(_tableId, _keyTuple, 1, _index * 1, bytes((_slice)));
-  }
-
   /** Get author */
   function getAuthor(uint32 x, uint32 y) internal view returns (address author) {
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256((x)));
     _keyTuple[1] = bytes32(uint256((y)));
 
-    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 1);
     return (address(Bytes.slice20(_blob, 0)));
   }
 
@@ -262,7 +130,7 @@ library Grid2D {
     _keyTuple[0] = bytes32(uint256((x)));
     _keyTuple[1] = bytes32(uint256((y)));
 
-    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 1);
     return (address(Bytes.slice20(_blob, 0)));
   }
 
@@ -272,7 +140,7 @@ library Grid2D {
     _keyTuple[0] = bytes32(uint256((x)));
     _keyTuple[1] = bytes32(uint256((y)));
 
-    StoreSwitch.setField(_tableId, _keyTuple, 2, abi.encodePacked((author)));
+    StoreSwitch.setField(_tableId, _keyTuple, 1, abi.encodePacked((author)));
   }
 
   /** Set author (using the specified store) */
@@ -281,7 +149,139 @@ library Grid2D {
     _keyTuple[0] = bytes32(uint256((x)));
     _keyTuple[1] = bytes32(uint256((y)));
 
-    _store.setField(_tableId, _keyTuple, 2, abi.encodePacked((author)));
+    _store.setField(_tableId, _keyTuple, 1, abi.encodePacked((author)));
+  }
+
+  /** Get data */
+  function getData(uint32 x, uint32 y) internal view returns (bytes memory data) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    bytes memory _blob = StoreSwitch.getField(_tableId, _keyTuple, 2);
+    return (bytes(_blob));
+  }
+
+  /** Get data (using the specified store) */
+  function getData(IStore _store, uint32 x, uint32 y) internal view returns (bytes memory data) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    bytes memory _blob = _store.getField(_tableId, _keyTuple, 2);
+    return (bytes(_blob));
+  }
+
+  /** Set data */
+  function setData(uint32 x, uint32 y, bytes memory data) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    StoreSwitch.setField(_tableId, _keyTuple, 2, bytes((data)));
+  }
+
+  /** Set data (using the specified store) */
+  function setData(IStore _store, uint32 x, uint32 y, bytes memory data) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    _store.setField(_tableId, _keyTuple, 2, bytes((data)));
+  }
+
+  /** Get the length of data */
+  function lengthData(uint32 x, uint32 y) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    uint256 _byteLength = StoreSwitch.getFieldLength(_tableId, _keyTuple, 2, getSchema());
+    return _byteLength / 1;
+  }
+
+  /** Get the length of data (using the specified store) */
+  function lengthData(IStore _store, uint32 x, uint32 y) internal view returns (uint256) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    uint256 _byteLength = _store.getFieldLength(_tableId, _keyTuple, 2, getSchema());
+    return _byteLength / 1;
+  }
+
+  /** Get an item of data (unchecked, returns invalid data if index overflows) */
+  function getItemData(uint32 x, uint32 y, uint256 _index) internal view returns (bytes memory) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    bytes memory _blob = StoreSwitch.getFieldSlice(_tableId, _keyTuple, 2, getSchema(), _index * 1, (_index + 1) * 1);
+    return (bytes(_blob));
+  }
+
+  /** Get an item of data (using the specified store) (unchecked, returns invalid data if index overflows) */
+  function getItemData(IStore _store, uint32 x, uint32 y, uint256 _index) internal view returns (bytes memory) {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    bytes memory _blob = _store.getFieldSlice(_tableId, _keyTuple, 2, getSchema(), _index * 1, (_index + 1) * 1);
+    return (bytes(_blob));
+  }
+
+  /** Push a slice to data */
+  function pushData(uint32 x, uint32 y, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    StoreSwitch.pushToField(_tableId, _keyTuple, 2, bytes((_slice)));
+  }
+
+  /** Push a slice to data (using the specified store) */
+  function pushData(IStore _store, uint32 x, uint32 y, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    _store.pushToField(_tableId, _keyTuple, 2, bytes((_slice)));
+  }
+
+  /** Pop a slice from data */
+  function popData(uint32 x, uint32 y) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    StoreSwitch.popFromField(_tableId, _keyTuple, 2, 1);
+  }
+
+  /** Pop a slice from data (using the specified store) */
+  function popData(IStore _store, uint32 x, uint32 y) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    _store.popFromField(_tableId, _keyTuple, 2, 1);
+  }
+
+  /** Update a slice of data at `_index` */
+  function updateData(uint32 x, uint32 y, uint256 _index, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    StoreSwitch.updateInField(_tableId, _keyTuple, 2, _index * 1, bytes((_slice)));
+  }
+
+  /** Update a slice of data (using the specified store) at `_index` */
+  function updateData(IStore _store, uint32 x, uint32 y, uint256 _index, bytes memory _slice) internal {
+    bytes32[] memory _keyTuple = new bytes32[](2);
+    _keyTuple[0] = bytes32(uint256((x)));
+    _keyTuple[1] = bytes32(uint256((y)));
+
+    _store.updateInField(_tableId, _keyTuple, 2, _index * 1, bytes((_slice)));
   }
 
   /** Get the full data */
@@ -305,8 +305,8 @@ library Grid2D {
   }
 
   /** Set the full data using individual values */
-  function set(uint32 x, uint32 y, bool isOccupied, bytes memory data, address author) internal {
-    bytes memory _data = encode(isOccupied, data, author);
+  function set(uint32 x, uint32 y, bool isOccupied, address author, bytes memory data) internal {
+    bytes memory _data = encode(isOccupied, author, data);
 
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256((x)));
@@ -316,8 +316,8 @@ library Grid2D {
   }
 
   /** Set the full data using individual values (using the specified store) */
-  function set(IStore _store, uint32 x, uint32 y, bool isOccupied, bytes memory data, address author) internal {
-    bytes memory _data = encode(isOccupied, data, author);
+  function set(IStore _store, uint32 x, uint32 y, bool isOccupied, address author, bytes memory data) internal {
+    bytes memory _data = encode(isOccupied, author, data);
 
     bytes32[] memory _keyTuple = new bytes32[](2);
     _keyTuple[0] = bytes32(uint256((x)));
@@ -328,12 +328,12 @@ library Grid2D {
 
   /** Set the full data using the data struct */
   function set(uint32 x, uint32 y, Grid2DData memory _table) internal {
-    set(x, y, _table.isOccupied, _table.data, _table.author);
+    set(x, y, _table.isOccupied, _table.author, _table.data);
   }
 
   /** Set the full data using the data struct (using the specified store) */
   function set(IStore _store, uint32 x, uint32 y, Grid2DData memory _table) internal {
-    set(_store, x, y, _table.isOccupied, _table.data, _table.author);
+    set(_store, x, y, _table.isOccupied, _table.author, _table.data);
   }
 
   /** Decode the tightly packed blob using this table's schema */
@@ -358,7 +358,7 @@ library Grid2D {
   }
 
   /** Tightly pack full data using this table's schema */
-  function encode(bool isOccupied, bytes memory data, address author) internal view returns (bytes memory) {
+  function encode(bool isOccupied, address author, bytes memory data) internal view returns (bytes memory) {
     uint40[] memory _counters = new uint40[](1);
     _counters[0] = uint40(bytes(data).length);
     PackedCounter _encodedLengths = PackedCounterLib.pack(_counters);

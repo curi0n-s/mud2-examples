@@ -28,10 +28,10 @@ contract Grid2DSystem is System {
         uint32 x, 
         uint32 y, 
         bool isOccupied,
-        bytes memory data,
-        address author
+        address author,
+        bytes memory data
     ) public unoccupiedOrOwner(x, y) withinGridLimits(x,y) {
-        Grid2D.set(x, y, isOccupied, data, author);
+        Grid2D.set(x, y, isOccupied, author, data);
     }
 
     /**

@@ -54,8 +54,8 @@ export default mudConfig({
       },
       schema: {
         isOccupied: "bool",
-        data: "bytes",
         author: "address",
+        data: "bytes",
       }
     },
     Grid2DTags: {
