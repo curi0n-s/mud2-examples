@@ -1,0 +1,320 @@
+curion@curion:~/crypto_dev/lattice/mud-testing/mud2-test-1$ pnpm run dev
+
+> mud-template-react@ dev /home/curion/crypto_dev/lattice/mud-testing/mud2-test-1
+> concurrently -n contracts,client -c cyan,magenta 'cd packages/contracts && pnpm run dev' 'cd packages/client && pnpm run dev'
+
+[client]
+[client] > client@0.0.0 dev /home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/packages/client
+[client] > wait-port localhost:8545 && vite
+[client]
+[contracts]
+[contracts] > contracts@0.0.0 dev /home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/packages/contracts
+[contracts] > pnpm mud dev-contracts --tsgenOutput ../client/src/mud
+[contracts]
+[client] Waiting for localhost:8545..(node:8324) ExperimentalWarning: Import assertions are not a stable feature of the JavaScript language. Avoid relying on their current behavior and syntax as those might change in a future version of Node.js.
+[contracts] (Use `node --trace-warnings ...` to show where the warning was created)
+[contracts] (node:8324) ExperimentalWarning: Importing JSON modules is an experimental feature and might change at any time
+[contracts] No output provided
+[contracts] running "forge clean"
+[client] ..mud.config.ts changed - regenerating tables and recs types
+[contracts] Generated table: src/codegen/tables/Counter.sol
+[contracts] Generated table: src/codegen/tables/TestData.sol
+[contracts] Generated table: src/codegen/tables/TestKeyedData.sol
+[contracts] Generated table: src/codegen/tables/Grid2D.sol
+[contracts] Generated table: src/codegen/tables/Grid2DTags.sol
+[client] ..Generated table: src/codegen/tables/Grid2DTagger.sol
+[contracts] Generated table: src/codegen/tables/GridConstants.sol
+[contracts] Generated table index: src/codegen/Tables.sol
+[contracts] Generated ts definition files: ../client/src/mud/contractComponents.ts
+[contracts] contracts changed - regenerating interfaces and contract types
+[contracts] Generated system interface: src/codegen/world/IGrid2DSystem.sol
+[contracts] Generated system interface: src/codegen/world/IGridConstantsSystem.sol
+[contracts] Generated system interface: src/codegen/world/IIncrementSystem.sol
+[contracts] Generated system interface: src/codegen/world/ITestDataSystem.sol
+[contracts] Generated system interface: src/codegen/world/ITestKeyedDataSystem.sol
+[contracts] Generated system interface: src/codegen/world/IWorld.sol
+[contracts] running "forge build"
+[contracts] Compiling 78 files with 0.8.19
+[client] ..........Solc 0.8.19 finished in 4.51s
+[contracts] Compiler run successful with warnings:
+[contracts] Warning (3420): Source file does not specify required compiler version! Consider adding "pragma solidity ^0.8.19;"
+[contracts] --> test/CounterTest.t.sol
+[contracts]
+[contracts] Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+[contracts]   --> script/PostDeploy.s.sol:13:16:
+[contracts]    |
+[contracts] 13 |   function run(address worldAddress) external {
+[contracts]    |                ^^^^^^^^^^^^^^^^^^^^
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> /home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+store@2.0.0-alpha.1.148_typescript@5.0.4/node_modules/@latticexyz/store/src/codegen/tables/Hooks.sol:187:3:
+[contracts]     |
+[contracts] 187 |   function encode(address[] memory value) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> /home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+store@2.0.0-alpha.1.148_typescript@5.0.4/node_modules/@latticexyz/store/src/codegen/tables/Callbacks.sol:187:3:
+[contracts]     |
+[contracts] 187 |   function encode(bytes24[] memory value) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> /home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+store@2.0.0-alpha.1.148_typescript@5.0.4/node_modules/@latticexyz/store/src/codegen/tables/StoreMetadata.sol:388:3:
+[contracts]     |
+[contracts] 388 |   function encode(string memory tableName, bytes memory abiEncodedFieldNames) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> /home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+store@2.0.0-alpha.1.148_typescript@5.0.4/node_modules/@latticexyz/store/src/codegen/tables/Mixed.sol:459:3:
+[contracts]     |
+[contracts] 459 |   function encode(uint32 u32, uint128 u128, uint32[] memory a32, string memory s) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> /home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+store@2.0.0-alpha.1.148_typescript@5.0.4/node_modules/@latticexyz/store/src/codegen/tables/Vector2.sol:199:3:
+[contracts]     |
+[contracts] 199 |   function encode(uint32 x, uint32 y) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> node_modules/@latticexyz/store/src/codegen/tables/Hooks.sol:187:3:
+[contracts]     |
+[contracts] 187 |   function encode(address[] memory value) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> node_modules/@latticexyz/store/src/codegen/tables/Callbacks.sol:187:3:
+[contracts]     |
+[contracts] 187 |   function encode(bytes24[] memory value) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> node_modules/@latticexyz/store/src/codegen/tables/StoreMetadata.sol:388:3:
+[contracts]     |
+[contracts] 388 |   function encode(string memory tableName, bytes memory abiEncodedFieldNames) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> node_modules/@latticexyz/store/src/codegen/tables/Mixed.sol:459:3:
+[contracts]     |
+[contracts] 459 |   function encode(uint32 u32, uint128 u128, uint32[] memory a32, string memory s) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> node_modules/@latticexyz/store/src/codegen/tables/Vector2.sol:199:3:
+[contracts]     |
+[contracts] 199 |   function encode(uint32 x, uint32 y) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/Counter.sol:186:3:
+[contracts]     |
+[contracts] 186 |   function encode(uint32 counterValue, uint32 counterValueSquared) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/TestData.sol:429:3:
+[contracts]     |
+[contracts] 429 |   function encode(
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/TestKeyedData.sol:199:3:
+[contracts]     |
+[contracts] 199 |   function encode(uint32 testUint32, bytes32 testBytes32) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/Grid2D.sol:361:3:
+[contracts]     |
+[contracts] 361 |   function encode(bool isOccupied, bytes memory data, address author) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/Grid2DTags.sol:299:3:
+[contracts]     |
+[contracts] 299 |   function decode(bytes memory _blob) internal view returns (Grid2DTagsData memory _table) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/Grid2DTags.sol:318:3:
+[contracts]     |
+[contracts] 318 |   function encode(uint32 tags, address[] memory taggers) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/Grid2DTagger.sol:487:3:
+[contracts]     |
+[contracts] 487 |   function decode(bytes memory _blob) internal view returns (Grid2DTaggerData memory _table) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/Grid2DTagger.sol:512:3:
+[contracts]     |
+[contracts] 512 |   function encode(
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]    --> src/codegen/tables/GridConstants.sol:186:3:
+[contracts]     |
+[contracts] 186 |   function encode(uint32 width, uint32 height) internal view returns (bytes memory) {
+[contracts]     |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[contracts] Warning (2018): Function state mutability can be restricted to pure
+[contracts]   --> src/systems/TestDataSystem.sol:58:3:
+[contracts]    |
+[contracts] 58 |   function randomStringWithSeed(uint32 _seed) public view returns (string memory) {
+[contracts]    |   ^ (Relevant source part starts here and spans across multiple lines).
+[contracts]
+[client] ..Typechain generated IWorld interface
+[contracts] running "anvil --block-time 1 --block-base-fee-per-gas 0"
+[contracts] mud.config.ts changed - regenerating tables and recs types
+[contracts] Generated table: src/codegen/tables/Counter.sol
+[contracts] Generated table: src/codegen/tables/TestData.sol
+[contracts] Generated table: src/codegen/tables/TestKeyedData.sol
+[contracts] Generated table: src/codegen/tables/Grid2D.sol
+[contracts] Generated table: src/codegen/tables/Grid2DTags.sol
+[client] .
+[client] Connected!
+[contracts] Generated table: src/codegen/tables/Grid2DTagger.sol
+[contracts] Generated table: src/codegen/tables/GridConstants.sol
+[contracts] Generated table index: src/codegen/Tables.sol
+[contracts] Generated ts definition files: ../client/src/mud/contractComponents.ts
+[contracts] contracts changed - regenerating interfaces and contract types
+[contracts] Generated system interface: src/codegen/world/IGrid2DSystem.sol
+[contracts] Generated system interface: src/codegen/world/IGridConstantsSystem.sol
+[contracts] Generated system interface: src/codegen/world/IIncrementSystem.sol
+[contracts] Generated system interface: src/codegen/world/ITestDataSystem.sol
+[contracts] Generated system interface: src/codegen/world/ITestKeyedDataSystem.sol
+[contracts] Generated system interface: src/codegen/world/IWorld.sol
+[contracts] running "forge build"
+[client]
+[client]   VITE v4.2.1  ready in 321 ms
+[client]
+[client]   ➜  Local:   http://localhost:3000/
+[client]   ➜  Network: use --host to expose
+[contracts] No files changed, compilation skipped
+[contracts] Typechain generated IWorld interface
+[contracts] redeploying World
+[contracts]
+[contracts]  Deploying MUD contracts to RPC http://127.0.0.1:8545
+[contracts]
+[contracts] Initial nonce 0
+[contracts] running "cast block-number --rpc-url http://127.0.0.1:8545"
+[contracts] Start deployment at block 1
+[contracts] executing deployment of World with nonce 0
+[contracts] Deploying Grid2DSystem
+[contracts] Deploying GridConstantsSystem
+[contracts] Deploying IncrementSystem
+[contracts] Deploying TestDataSystem
+[contracts] Deploying TestKeyedDataSystem
+[contracts] executing deployment of CoreModule with nonce 1
+[contracts] executing deployment of KeysWithValueModule with nonce 2
+[contracts] executing deployment of KeysInTableModule with nonce 3
+[contracts] executing deployment of UniqueEntityModule with nonce 4
+[contracts] executing deployment of SnapSyncModule with nonce 5
+[contracts] executing deployment of Grid2DSystem with nonce 6
+[contracts] executing deployment of GridConstantsSystem with nonce 7
+[contracts] executing deployment of IncrementSystem with nonce 8
+[contracts] executing deployment of TestDataSystem with nonce 9
+[contracts] executing deployment of TestKeyedDataSystem with nonce 10
+[contracts] Deployed TestKeyedDataSystem to 0x610178dA211FEF7D417bC0e6FeD39F05609AD788
+[contracts] Deployed UniqueEntityModule to 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9
+[contracts] Deployed Grid2DSystem to 0x0165878A594ca255338adfa4d48449f69242Eb8F
+[contracts] Deployed GridConstantsSystem to 0xa513E6E4b8f2a923D98304ec87F64353C4D5C853
+[contracts] Deployed TestDataSystem to 0x8A791620dd6260079BF849Dc5567aDC3F2FdC318
+[contracts] Deployed IncrementSystem to 0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6
+[contracts] Deployed CoreModule to 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+[contracts] Deployed KeysInTableModule to 0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9
+[contracts] Deployed SnapSyncModule to 0x5FC8d32690cc91D4c39d9d3abcBD16989F875707
+[contracts] Deployed World to 0x5FbDB2315678afecb367f032d93F642f64180aa3
+[contracts] Installing core World modules
+[contracts] Deployed KeysWithValueModule to 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+[contracts] executing transaction: installRootModule('0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512','0x') with nonce 11
+[contracts] Installed core World modules
+[contracts] executing transaction: registerNamespace('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0') with nonce 12
+[contracts] Registering table Counter at testing/Counter
+[contracts] Registering table TestData at testing/TestData
+[contracts] Registering table TestKeyedData at testing/TestKeyedData
+[contracts] Registering table Grid2D at testing/Grid2D
+[contracts] Registering table Grid2DTags at testing/Grid2DTags
+[contracts] Registering table Grid2DTagger at testing/Grid2DTagger
+[contracts] Registering table GridConstants at testing/GridConstants
+[contracts] Registering system Grid2DSystem at testing/Grid2DSystem
+[contracts] Registering system GridConstantsSystem at testing/GridConstantsSys
+[contracts] Registering system IncrementSystem at testing/IncrementSystem
+[contracts] Registering system TestDataSystem at testing/TestDataSystem
+[contracts] Registering system TestKeyedDataSystem at testing/TKDSystem
+[contracts] MUD dev-contracts watcher failed to deploy config or contracts changes Error: Static fields must come before dynamic fields in the schema
+[contracts]     at o (file:///home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+schema-type@2.0.0-alpha.1.148_typescript@4.9.5_zod@3.21.4/node_modules/@latticexyz/schema-type/dist/typescript/index.js:1:10547)
+[contracts]     at file:///home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+cli@2.0.0-alpha.1.148_google-protobuf@3.21.2/node_modules/@latticexyz/cli/dist/chunk-ZL3JKKJB.js:20:3277
+[contracts]     at Array.map (<anonymous>)
+[contracts]     at Ae (file:///home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+cli@2.0.0-alpha.1.148_google-protobuf@3.21.2/node_modules/@latticexyz/cli/dist/chunk-ZL3JKKJB.js:20:2989)
+[contracts]     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[contracts]     at async Qt (file:///home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+cli@2.0.0-alpha.1.148_google-protobuf@3.21.2/node_modules/@latticexyz/cli/dist/chunk-ZL3JKKJB.js:24:129)
+[contracts]     at async w (file:///home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+cli@2.0.0-alpha.1.148_google-protobuf@3.21.2/node_modules/@latticexyz/cli/dist/mud.js:22:3996)
+[contracts]     at async file:///home/curion/crypto_dev/lattice/mud-testing/mud2-test-1/node_modules/.pnpm/@latticexyz+cli@2.0.0-alpha.1.148_google-protobuf@3.21.2/node_modules/@latticexyz/cli/dist/mud.js:22:3318
+[contracts]
+[contracts] .------..------..------.
+[contracts] |M.--. ||U.--. ||D.--. |
+[contracts] | (\/) || (\/) || :/\: |
+[contracts] | :\/: || :\/: || (__) |
+[contracts] | '--'M|| '--'U|| '--'D|
+[contracts] '------''------''------'
+[contracts]
+[contracts] MUD watching for changes...
+[contracts] executing transaction: registerTable('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','67,111,117,110,116,101,114,0,0,0,0,0,0,0,0,0','0,8,2,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0','0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0') with nonce 13
+[contracts] executing transaction: registerTable('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,67,111,110,115,116,97,110,116,115,0,0,0','0,8,2,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0','0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0') with nonce 14
+[contracts] executing transaction: registerSystem('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,67,111,110,115,116,97,110,116,115,83,121,115','0xa513E6E4b8f2a923D98304ec87F64353C4D5C853','true') with nonce 15
+[contracts] executing transaction: registerSystem('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,75,68,83,121,115,116,101,109,0,0,0,0,0,0,0','0x610178dA211FEF7D417bC0e6FeD39F05609AD788','true') with nonce 16
+[contracts] executing transaction: registerTable('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,101,115,116,75,101,121,101,100,68,97,116,97,0,0,0','0,36,2,0,3,95,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0','0,4,1,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0') with nonce 17
+[contracts] executing transaction: registerTable('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,50,68,84,97,103,115,0,0,0,0,0,0','0,4,1,1,3,195,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0','0,8,2,0,3,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0') with nonce 18
+[contracts] executing transaction: registerTable('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,50,68,84,97,103,103,101,114,0,0,0,0','0,0,0,3,101,101,113,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0','0,20,1,0,97,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0') with nonce 19
+[contracts] executing transaction: registerSystem('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','73,110,99,114,101,109,101,110,116,83,121,115,116,101,109,0','0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6','true') with nonce 20
+[contracts] executing transaction: registerSystem('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,50,68,83,121,115,116,101,109,0,0,0,0','0x0165878A594ca255338adfa4d48449f69242Eb8F','true') with nonce 21
+[contracts] executing transaction: registerTable('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,101,115,116,68,97,116,97,0,0,0,0,0,0,0,0','0,36,2,2,3,95,197,101,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0','0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0') with nonce 22
+[contracts] executing transaction: registerSystem('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,101,115,116,68,97,116,97,83,121,115,116,101,109,0,0','0x8A791620dd6260079BF849Dc5567aDC3F2FdC318','true') with nonce 23
+[contracts] Registered system Grid2DSystem at testing/Grid2DSystem
+[contracts] Registering function "testing_Grid2DSystem_setGridPointData(uint32,uint32,(bool,bytes,address))"
+[contracts] Registering function "testing_Grid2DSystem_setGridPointData(uint32,uint32,bool,bytes,address)"
+[contracts] Registered system IncrementSystem at testing/IncrementSystem
+[contracts] Registering function "testing_IncrementSystem_increment()"
+[contracts] Registering function "testing_IncrementSystem_incrementSquared()"
+[contracts] Registered system GridConstantsSystem at testing/GridConstantsSys
+[contracts] Registering function "testing_GridConstantsSys_setLimits(uint32,uint32)"
+[contracts] Registered system TestKeyedDataSystem at testing/TKDSystem
+[contracts] Registering function "testing_TKDSystem_pushRecordToTestKeyedData(uint32)"
+[contracts] Registered system TestDataSystem at testing/TestDataSystem
+[contracts] Registering function "testing_TestDataSystem_pushRecordToTestData()"
+[contracts] Registering function "testing_TestDataSystem_randomStringWithSeed(uint32)"
+[contracts] Registering function "testing_TestDataSystem_setInitialArray(uint32[])"
+[contracts] executing transaction: setMetadata(bytes16,bytes16,string,string[])('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','67,111,117,110,116,101,114,0,0,0,0,0,0,0,0,0','Counter','counterValue,counterValueSquared') with nonce 24
+[contracts] executing transaction: setMetadata(bytes16,bytes16,string,string[])('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,67,111,110,115,116,97,110,116,115,0,0,0','GridConstants','width,height') with nonce 25
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,50,68,83,121,115,116,101,109,0,0,0,0','setGridPointData','(uint32,uint32,(bool,bytes,address))') with nonce 26
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','73,110,99,114,101,109,101,110,116,83,121,115,116,101,109,0','increment','()') with nonce 27
+[contracts] executing transaction: setMetadata(bytes16,bytes16,string,string[])('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,101,115,116,68,97,116,97,0,0,0,0,0,0,0,0','TestData','testUint32,testBytes32,testString,testUint32Array') with nonce 28
+[contracts] executing transaction: setMetadata(bytes16,bytes16,string,string[])('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,101,115,116,75,101,121,101,100,68,97,116,97,0,0,0','TestKeyedData','testUint32,testBytes32') with nonce 29
+[contracts] executing transaction: setMetadata(bytes16,bytes16,string,string[])('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,50,68,84,97,103,103,101,114,0,0,0,0','Grid2DTagger','tagX,tagY,timestamp') with nonce 30
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,101,115,116,68,97,116,97,83,121,115,116,101,109,0,0','pushRecordToTestData','()') with nonce 31
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,50,68,83,121,115,116,101,109,0,0,0,0','setGridPointData','(uint32,uint32,bool,bytes,address)') with nonce 32
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','73,110,99,114,101,109,101,110,116,83,121,115,116,101,109,0','incrementSquared','()') with nonce 33
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,101,115,116,68,97,116,97,83,121,115,116,101,109,0,0','randomStringWithSeed','(uint32)') with nonce 34
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,75,68,83,121,115,116,101,109,0,0,0,0,0,0,0','pushRecordToTestKeyedData','(uint32)') with nonce 35
+[contracts] Registered table GridConstants at GridConstants
+[contracts] Registered table Counter at Counter
+[contracts] Registered function "testing_TestDataSystem_pushRecordToTestData()"
+[contracts] Registered function "testing_Grid2DSystem_setGridPointData(uint32,uint32,(bool,bytes,address))"
+[contracts] Registered function "testing_IncrementSystem_increment()"
+[contracts] Registered table TestData at TestData
+[contracts] Registered table TestKeyedData at TestKeyedData
+[contracts] Registered table Grid2DTagger at Grid2DTagger
+[contracts] executing transaction: setMetadata(bytes16,bytes16,string,string[])('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,50,68,84,97,103,115,0,0,0,0,0,0','Grid2DTags','tags,taggers') with nonce 36
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','71,114,105,100,67,111,110,115,116,97,110,116,115,83,121,115','setLimits','(uint32,uint32)') with nonce 37
+[contracts] executing transaction: registerFunctionSelector('116,101,115,116,105,110,103,0,0,0,0,0,0,0,0,0','84,101,115,116,68,97,116,97,83,121,115,116,101,109,0,0','setInitialArray','(uint32[])') with nonce 38
+[contracts] Registered function "testing_Grid2DSystem_setGridPointData(uint32,uint32,bool,bytes,address)"
+[contracts] Registered function "testing_TestDataSystem_setInitialArray(uint32[])"
+[contracts] Registered table Grid2DTags at Grid2DTags
+[contracts] Registered function "testing_GridConstantsSys_setLimits(uint32,uint32)"
+[contracts] Registered function "testing_TKDSystem_pushRecordToTestKeyedData(uint32)"
+[contracts] Registered function "testing_IncrementSystem_incrementSquared()"
+[contracts] Registered function "testing_TestDataSystem_randomStringWithSeed(uint32)"
