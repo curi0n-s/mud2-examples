@@ -1,3 +1,12 @@
+body {
+  background-color: rgb(155, 199, 220);
+  font-family: cursive;
+  font-style: oblique;
+  font-size: 14px;
+  font-variant: normal;
+  font-weight: 600;
+}
+
 .grid {
   display: flex;
   flex-direction: column;
@@ -11,4 +20,56 @@
   width: 50px; /* or any size you want */
   height: 50px; /* or any size you want */
   border: 1px solid black;
+}
+
+button {
+  background-color: rgb(215, 173, 115);
+  font-family: cursive;
+  font-style: oblique;
+  font-size: 14px;
+  font-variant: normal;
+  font-weight: 600;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+}
+
+button:hover {
+  background-color: rgb(227, 209, 183);
+  font-family: cursive;
+  font-style: oblique;
+  font-size: 14px;
+  font-variant: normal;
+  font-weight: 600;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+}
+
+button:active {
+  background-color: rgb(201, 23, 204);
+  font-family: cursive;
+  font-style: oblique;
+  font-size: 14px;
+  font-variant: normal;
+  font-weight: 600;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
+}
+
+input {
+  background-color: rgb(214, 208, 194);
+  font-family: cursive;
+  font-style: oblique;
+  font-size: 14px;
+  font-variant: normal;
+  font-weight: 600;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 5px;
+  padding: 5px;
 }

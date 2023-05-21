@@ -82,6 +82,17 @@ export function createSystemCalls(
     return getComponentValue(NamespaceOwner, { namespace, tableName, fieldName, fieldIndex, inputData });
   };
 
+  const getValueFromField = async (namespace: string, tableName: string, fieldName: string, fieldIndex: number) => {
+    const tx = await worldSend("testing_UICreatorSystem_getValueFromField", [
+      namespace,
+      tableName,
+      fieldName,
+      fieldIndex,
+    ]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(NamespaceOwner, { namespace, tableName, fieldName, fieldIndex });
+  };
+
   const setGridPointData = async (x: number, y: number, isOccupied: boolean, data: string, author: string) => {
     const tx = await worldSend("testing_Grid2DSystem_setGridPointData", [x, y, isOccupied, author, data]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
@@ -103,6 +114,7 @@ export function createSystemCalls(
     createNewTableInNamespace,
     createNewFieldInTable,
     pushValueToField,
+    getValueFromField,
     setGridPointData,
     setGridLimit,
   };

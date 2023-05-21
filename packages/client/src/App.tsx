@@ -1,11 +1,11 @@
 //@ts-nocheck
-import { useComponentValue, useRow, useEntityQuery, useTable } from "@latticexyz/react";
+import { useComponentValue, useRow, useEntityQuery, useRows } from "@latticexyz/react";
+// import { useTables } from "@latticexyz/dev-tools";
 import { Has, HasValue, getComponentValueStrict } from "@latticexyz/recs";
-import { stringToBytes16, stringToBytes32, awaitStreamValue } from "@latticexyz/utils";
+import { stringToBytes16, stringToBytes32 } from "@latticexyz/utils";
 import { encodeSchema, SchemaType } from "@latticexyz/schema-type";
 import { useMUD } from "./MUDContext";
 import { useState, useEffect } from "react";
-import { resolveTableId } from "@latticexyz/config";
 import "./App.css";
 
 export const App = () => {
@@ -22,6 +22,7 @@ export const App = () => {
       createNewTableInNamespace,
       createNewFieldInTable,
       pushValueToField,
+      getValueFromField,
     },
     network: { singletonEntity, storeCache, worldSend, worldContract, txReduced$ },
   } = useMUD();
@@ -32,6 +33,7 @@ export const App = () => {
   const [fieldNameInput, setFieldNameInput] = useState("");
   const [fieldIndexInput, setFieldIndexInput] = useState("");
   const [pushToFieldInput, setPushToFieldInput] = useState("");
+  const [demoDone, setDemoDone] = useState(false);
 
   const [gridLimitVal, setGridLimitVal] = useState(5);
 
@@ -48,6 +50,12 @@ export const App = () => {
   // Access components either via ECS or via useRow as shown in the livestream
   // ECS queries can find by value, useRow can also find by key
 
+  //all tables?
+  // const tables = useTables();
+  // console.log("tables", tables);
+
+  console.log("TestKeyedData", TestKeyedData);
+
   const counter = useComponentValue(Counter, singletonEntity);
   console.log("counter", counter);
 
@@ -63,6 +71,7 @@ export const App = () => {
     Has(TestKeyedData),
     HasValue(TestKeyedData, { testUint32: Number(recordId) }),
   ]);
+
   console.log("recordId", recordId);
   console.log("typeof recordId", typeof recordId);
   console.log("entities2", matchingEntities2);
@@ -130,40 +139,37 @@ export const App = () => {
   // no resources at this selector yet (resources are namespaces, tables, and systems)
   //
 
-  //not working yet
-  const createFieldInTable = async () => {
-    await worldSend("setField", [
-      namespace, //namespace
-      tableName, //tableName
-      [stringToBytes32("")], //key
-      "hello", //schemaIndex
-    ]);
+  //must run on first txns after contract deploy
+  const testNamespaceName = "ns1";
+  const testTableName = "table1";
+  const testFieldName = "field1";
+  const testFieldIndex = "1";
+  const testFieldValue = "hello world";
+  const createDemo = async () => {
+    await createNewNamespace(testNamespaceName);
+    await createNewTableInNamespace(testNamespaceName, testTableName);
+    await createNewFieldInTable(testNamespaceName, testTableName, testFieldName, testFieldIndex);
+    await pushValueToField(
+      testNamespaceName,
+      testTableName,
+      testFieldName,
+      testFieldIndex,
+      stringToBytes32(testFieldValue)
+    );
   };
 
-  const getTable = async () => {
-    const table = await worldSend("get", [worldContract.address, tableId]);
-    // const table2 = await worldSend("get", [worldContract.address, tableName]);
-    console.log("table", table);
-    // console.log("table2", table2);
-  };
+  // useEffect(() => {
 
-  //not working yet
-  const createRecordInTable = async () => {
-    await worldSend("setRecord", [
-      namespace, //namespace
-      tableName, //tableName
-      0, // [stringToBytes32("abcd")],
-      //bytes
-    ]);
-  };
+  //neither work, does storeCache either not store these new tables or need to be updated?
+  const fieldDataFromNewTable = useRow(storeCache, {
+    table: tableNameInput,
+    key: { field1: stringToBytes32(testFieldValue) },
+  });
+  console.log("fieldDataFromNewTable", fieldDataFromNewTable);
 
-  const getTableSchema = async () => {
-    const schema = await worldSend("getSchema", ["0xc1a8cca06055494ab6f0ab5fe5adc8fdf1d2e69e19834513d092b409fe69cff1"]);
-    const schema2 = await worldSend("getSchema", [tableNameBytes32]);
-
-    console.log("schema", schema);
-    console.log("schema2", schema2);
-  };
+  const data2 = useRows(storeCache);
+  console.log("storeCache", storeCache);
+  console.log("data2", data2);
 
   //===================================================================================================
   // UI
@@ -171,7 +177,11 @@ export const App = () => {
 
   return (
     <>
-      <h1>Basic Examples</h1>
+      <title>MUD v2 Examples</title>
+
+      <h1>MUD v2 Examples</h1>
+      <p>________________________________________________________</p>
+
       <h2>Push new record to table (overwrite old record)</h2>
       <div>
         <p>
@@ -179,7 +189,6 @@ export const App = () => {
           <span>{counter2?.value.counterValue ?? "??"}</span>
         </p>
       </div>
-
       <button
         type="button"
         onClick={async (event) => {
@@ -219,7 +228,6 @@ export const App = () => {
           <span>{testData?.testUint32Array[1] ?? "??"}</span>, <span>{testData?.testUint32Array[2] ?? "??"}</span>
         </p>
       </div>
-
       <button
         type="button"
         onClick={async (event) => {
@@ -229,10 +237,8 @@ export const App = () => {
       >
         Push Record
       </button>
-
       <p></p>
       <h2>Add record to table by id</h2>
-
       <p>
         {/* get data from testKeyedData of key recordId */}
         TestKeyedData testUint32: <span>{testKeyedData2?.value?.testUint32 ?? "??" ?? "??"}</span>
@@ -258,11 +264,24 @@ export const App = () => {
         </button>
       </div>
 
-      <p></p>
-      <h1>Namespace, Table, (Metadata), Field, Record Creation</h1>
+      <p>________________________________________________________</p>
+      <h2>Namespace, Table, (Metadata), Field, Record Creation</h2>
       <p>Keep all values the same throughout, i.e., don't change namespace between namespace and table creation...</p>
-      <h2>Create Namespace (namespaceName)</h2>
+      <h3>Create Namespace (namespaceName)</h3>
+
       <div>
+        <button
+          type="button"
+          onClick={async (event) => {
+            event.preventDefault();
+            await createDemo();
+          }}
+        >
+          Demo (view txns in console)
+        </button>
+
+        <p></p>
+
         <input
           onChange={(event) => {
             event.preventDefault();
@@ -280,7 +299,7 @@ export const App = () => {
         </button>
 
         <p></p>
-        <h2>Create Table (namespaceName, tableName)</h2>
+        <h3>Create Table (namespaceName, tableName)</h3>
         <div>
           <input
             onChange={(event) => {
@@ -299,7 +318,7 @@ export const App = () => {
           </button>
         </div>
         <p></p>
-        <h2>Create Field (fieldName, fieldIndex)</h2>
+        <h3>Create Field (fieldName, fieldIndex)</h3>
         <p>
           fieldIndex must be {">"} 0 and possibly {"<"} number of fields defined in schema (1 atm)
         </p>
@@ -344,14 +363,36 @@ export const App = () => {
             type="button"
             onClick={async (event) => {
               event.preventDefault();
-              await pushValueToField(namespaceInput, tableNameInput, fieldNameInput, fieldIndexInput, pushToFieldInput);
+              console.log("stringToBytes32(pushToFieldInput)", stringToBytes32(pushToFieldInput));
+              await pushValueToField(
+                namespaceInput,
+                tableNameInput,
+                fieldNameInput,
+                fieldIndexInput,
+                stringToBytes32(pushToFieldInput)
+              );
             }}
           >
             pushValueToField
           </button>
         </div>
-      </div>
 
+        <div>
+          <p></p>
+          <h2>Get Field (recordId)</h2>
+          <p>
+            recordId must be {">"} 0 and {"<"} number of records in table
+          </p>
+          <button
+            onClick={async (event) => {
+              event.preventDefault();
+              console.log(await getValueFromField(namespaceInput, tableNameInput, fieldNameInput, fieldIndexInput));
+            }}
+          >
+            getValueFromField
+          </button>
+        </div>
+      </div>
       <div>
         <button
           type="button"
@@ -363,7 +404,6 @@ export const App = () => {
           getTable
         </button>
       </div>
-
       <div>
         <h1>Grid Examples</h1>
         <div>

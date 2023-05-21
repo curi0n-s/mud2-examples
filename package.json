@@ -26,6 +26,7 @@
     "pnpm": "8.x"
   },
   "dependencies": {
+    "@latticexyz/dev-tools": "2.0.0-alpha.1.148+85e38ba8",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "react": "^18.2.0",

@@ -99,6 +99,23 @@ contract UICreatorSystem is System {
     //     );
     // }
 
+    /**
+    function getRecord(bytes32 tableId, bytes32[] memory key, Schema schema) internal view returns (bytes memory)
+    function getRecord(bytes32 tableId, bytes32[] memory key) internal view returns (bytes memory) 
+
+     */
+
+    function getValueFromField(string memory namespaceName, string memory tableName, string memory fieldName, uint8 fieldIndex) public view returns (bytes memory) {
+        bytes32 tableId = keccak256(abi.encodePacked(tableName));
+        bytes32[] memory keyArg = new bytes32[](1);
+        keyArg[0] = keccak256(abi.encodePacked(tableName,".",fieldName));
+
+        return IWorld(_world()).getRecord(
+            tableId,
+            keyArg
+        );
+    }
+
     //==================================================================
     // HELPERS
     //==================================================================

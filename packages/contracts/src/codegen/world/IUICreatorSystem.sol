@@ -28,6 +28,13 @@ interface IUICreatorSystem {
     bytes calldata inputData
   ) external;
 
+  function testing_UICreatorSystem_getValueFromField(
+    string memory namespaceName,
+    string memory tableName,
+    string memory fieldName,
+    uint8 fieldIndex
+  ) external view returns (bytes memory);
+
   function testing_UICreatorSystem_stringToBytes16(string memory input) external pure returns (bytes16);
 
   function testing_UICreatorSystem_stringToBytes32(string memory source) external pure returns (bytes32 result);
