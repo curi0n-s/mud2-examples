@@ -7,6 +7,6 @@ import { Counter, CounterData, CounterTableId } from "./tables/Counter.sol";
 import { TestData, TestDataData, TestDataTableId } from "./tables/TestData.sol";
 import { TestKeyedData, TestKeyedDataData, TestKeyedDataTableId } from "./tables/TestKeyedData.sol";
 import { Grid2D, Grid2DData, Grid2DTableId } from "./tables/Grid2D.sol";
-import { Grid2DTags, Grid2DTagsData, Grid2DTagsTableId } from "./tables/Grid2DTags.sol";
-import { Grid2DTagger, Grid2DTaggerData, Grid2DTaggerTableId } from "./tables/Grid2DTagger.sol";
 import { GridConstants, GridConstantsData, GridConstantsTableId } from "./tables/GridConstants.sol";
+import { NamespaceOwner, NamespaceOwnerTableId } from "./tables/NamespaceOwner.sol";
+import { OwnerNamespaces, OwnerNamespacesTableId } from "./tables/OwnerNamespaces.sol";

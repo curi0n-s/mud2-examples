@@ -72,39 +72,6 @@ export function defineContractComponents(world: World) {
         }
       );
     })(),
-    Grid2DTags: (() => {
-      const tableId = new TableId("testing", "Grid2DTags");
-      return defineComponent(
-        world,
-        {
-          tags: RecsType.Number,
-          taggers: RecsType.StringArray,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHexString(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
-    Grid2DTagger: (() => {
-      const tableId = new TableId("testing", "Grid2DTagger");
-      return defineComponent(
-        world,
-        {
-          tagX: RecsType.NumberArray,
-          tagY: RecsType.NumberArray,
-          timestamp: RecsType.BigIntArray,
-        },
-        {
-          metadata: {
-            contractId: tableId.toHexString(),
-            tableId: tableId.toString(),
-          },
-        }
-      );
-    })(),
     GridConstants: (() => {
       const tableId = new TableId("testing", "GridConstants");
       return defineComponent(
@@ -112,6 +79,36 @@ export function defineContractComponents(world: World) {
         {
           width: RecsType.Number,
           height: RecsType.Number,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    NamespaceOwner: (() => {
+      const tableId = new TableId("testing", "NamespaceOwner");
+      return defineComponent(
+        world,
+        {
+          owner: RecsType.String,
+        },
+        {
+          metadata: {
+            contractId: tableId.toHexString(),
+            tableId: tableId.toString(),
+          },
+        }
+      );
+    })(),
+    OwnerNamespaces: (() => {
+      const tableId = new TableId("testing", "OwnerNamespaces");
+      return defineComponent(
+        world,
+        {
+          namespaceIds: RecsType.StringArray,
         },
         {
           metadata: {

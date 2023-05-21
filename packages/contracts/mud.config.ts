@@ -3,24 +3,33 @@ import { mudConfig } from "@latticexyz/world/register";
 export default mudConfig({
   namespace: "testing",
   name: "test",
-  systems: {
-    IncrementSystem: {
-      name : "IncrementSystem",
-      openAccess: true,
-    },
-    TestDataSystem: {
-      name : "TestDataSystem",
-      openAccess: true,
-    },
-    TestKeyedDataSystem: {
-      name : "TKDSystem",
-      openAccess: true,
-    },
-    Grid2DSystem: {
-      name : "Grid2DSystem",
-      openAccess: true,
-    },
-  },
+  // systems: {
+  //   IncrementSystem: {
+  //     name : "IncrementSystem",
+  //     openAccess: true,
+  //   },
+  //   TestDataSystem: {
+  //     name : "TestDataSystem",
+  //     openAccess: true,
+  //   },
+  //   TestKeyedDataSystem: {
+  //     name : "TKDSystem",
+  //     openAccess: true,
+  //   },
+  //   Grid2DSystem: {
+  //     name : "Grid2DSystem",
+  //     openAccess: true,
+  //   },
+  //   GridConstantsSystem: {
+  //     name : "GridConstantsSys",
+  //     openAccess: true,
+  //   },
+  //   NamespaceCreatorSystem: {
+  //     name : "NamespaceCreatorSystem",
+  //     openAccess: true,
+  //   },
+  // },
+
   tables: {
     Counter: {
       keySchema: {},
@@ -58,32 +67,48 @@ export default mudConfig({
         data: "bytes",
       }
     },
-    Grid2DTags: {
-      keySchema: {
-        x: "uint32",
-        y: "uint32",
-      },
-      schema: {
-        tags: "uint32",
-        taggers: "address[]",
-      }
-    },
-    Grid2DTagger: {
-      keySchema: {
-        tagger: "address",
-      },
-      schema: {
-        tagX: "uint32[]",
-        tagY: "uint32[]",
-        timestamp: "uint128[]",
-      }
-    },
+    // Grid2DTags: {
+    //   keySchema: {
+    //     x: "uint32",
+    //     y: "uint32",
+    //   },
+    //   schema: {
+    //     tags: "uint32",
+    //     taggers: "address[]",
+    //   }
+    // },
+    // Grid2DTagger: {
+    //   keySchema: {
+    //     tagger: "address",
+    //   },
+    //   schema: {
+    //     tagX: "uint32[]",
+    //     tagY: "uint32[]",
+    //     timestamp: "uint128[]",
+    //   }
+    // },
     GridConstants: {
       keySchema: {},
       schema: {
         width: "uint32",
         height: "uint32",
       }
+    },
+    NamespaceOwner: {
+      keySchema: {
+        namespaceId: "bytes16",
+      },
+      schema: {
+        owner: "address",
+      }
+    },
+    OwnerNamespaces: {
+      keySchema: {
+        owner: "address",
+      },
+      schema: {
+        namespaceIds: "bytes16[]",
+      },
     },
   },
 

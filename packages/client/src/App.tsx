@@ -18,12 +18,21 @@ export const App = () => {
       pushRecordToTestKeyedData,
       setGridLimit,
       setGridPointData,
+      createNewNamespace,
+      createNewTableInNamespace,
+      createNewFieldInTable,
+      pushValueToField,
     },
     network: { singletonEntity, storeCache, worldSend, worldContract, txReduced$ },
   } = useMUD();
   const [recordId, setRecordId] = useState(0);
-  const [stringInput, setStringInput] = useState("");
+  const [namespaceInput, setNamespaceInput] = useState("");
   const [tableId, setTableId] = useState("");
+  const [tableNameInput, setTableNameInput] = useState("");
+  const [fieldNameInput, setFieldNameInput] = useState("");
+  const [fieldIndexInput, setFieldIndexInput] = useState("");
+  const [pushToFieldInput, setPushToFieldInput] = useState("");
+
   const [gridLimitVal, setGridLimitVal] = useState(5);
 
   const [grid, setGrid] = useState(null);
@@ -103,11 +112,11 @@ export const App = () => {
   const defineKeys = () => {};
   const defineVaules = () => {};
 
-  const namespace = stringToBytes16(stringInput);
+  const namespace = stringToBytes16(namespaceInput);
   console.log("world", worldContract.address);
   console.log("namespace", namespace);
-  const tableName = stringToBytes16(stringInput);
-  const tableNameBytes32 = stringToBytes32(stringInput);
+  const tableName = stringToBytes16(tableNameInput);
+  const tableNameBytes32 = stringToBytes32(tableNameInput);
 
   //checking schema types for adding them in UI dynamically
   console.log("schemeType uint256", SchemaType.UINT256); //31
@@ -120,18 +129,6 @@ export const App = () => {
   // can NOT write to ROOT_NAME namespace
   // no resources at this selector yet (resources are namespaces, tables, and systems)
   //
-  const createTable = async () => {
-    const registerTableTxn = await worldSend("registerTable", [
-      namespace, //namespace
-      tableName, //tableName
-      encodeSchema([SchemaType.UINT256]), //value schema
-      encodeSchema([SchemaType.BYTES32]), //key schema
-    ]);
-    const streamVal = await awaitStreamValue(txReduced$, (txHash) => txHash === registerTableTxn.hash);
-    setTableId(streamVal);
-    console.log("resolveTableId(stringInput)", resolveTableId(stringInput));
-    console.log("streamVal", streamVal);
-  };
 
   //not working yet
   const createFieldInTable = async () => {
@@ -262,50 +259,100 @@ export const App = () => {
       </div>
 
       <p></p>
-      <h2>Create table with input = namespace name</h2>
+      <h1>Namespace, Table, (Metadata), Field, Record Creation</h1>
+      <p>Keep all values the same throughout, i.e., don't change namespace between namespace and table creation...</p>
+      <h2>Create Namespace (namespaceName)</h2>
       <div>
         <input
           onChange={(event) => {
             event.preventDefault();
-            setStringInput(event.target.value);
+            setNamespaceInput(event.target.value);
           }}
         />
         <button
           type="button"
           onClick={async (event) => {
             event.preventDefault();
-            await createTable();
+            await createNewNamespace(namespaceInput);
           }}
         >
-          createTable
+          createNewNamespace
         </button>
-        <button
-          type="button"
-          onClick={async (event) => {
-            event.preventDefault();
-            await createFieldInTable();
-          }}
-        >
-          createFieldInTable
-        </button>
-        <button
-          type="button"
-          onClick={async (event) => {
-            event.preventDefault();
-            await createRecordInTable();
-          }}
-        >
-          createRecordInTable
-        </button>
-        <button
-          type="button"
-          onClick={async (event) => {
-            event.preventDefault();
-            console.log(getTableSchema());
-          }}
-        >
-          getTableSchema
-        </button>
+
+        <p></p>
+        <h2>Create Table (namespaceName, tableName)</h2>
+        <div>
+          <input
+            onChange={(event) => {
+              event.preventDefault();
+              setTableNameInput(event.target.value);
+            }}
+          />
+          <button
+            type="button"
+            onClick={async (event) => {
+              event.preventDefault();
+              await createNewTableInNamespace(namespaceInput, tableNameInput);
+            }}
+          >
+            createNewTableInNamespace
+          </button>
+        </div>
+        <p></p>
+        <h2>Create Field (fieldName, fieldIndex)</h2>
+        <p>
+          fieldIndex must be {">"} 0 and possibly {"<"} number of fields defined in schema (1 atm)
+        </p>
+        <p>system currently accommodates one field whose input data can fit in bytes32</p>
+        <p>auto-creates metadata in system function call (reason for one field limit atm...)</p>
+        <div>
+          <input
+            onChange={(event) => {
+              event.preventDefault();
+              setFieldNameInput(event.target.value);
+            }}
+          />
+          <input
+            onChange={(event) => {
+              event.preventDefault();
+              setFieldIndexInput(event.target.value);
+            }}
+          />
+          <button
+            type="button"
+            onClick={async (event) => {
+              event.preventDefault();
+              await createNewFieldInTable(namespaceInput, tableNameInput, fieldNameInput, fieldIndexInput);
+            }}
+          >
+            createNewFieldInTable
+          </button>
+        </div>
+
+        <div>
+          <p></p>
+          <h2>Push to Field (inputData)</h2>
+
+          <input
+            onChange={(event) => {
+              event.preventDefault();
+              setPushToFieldInput(event.target.value);
+            }}
+          />
+
+          <button
+            type="button"
+            onClick={async (event) => {
+              event.preventDefault();
+              await pushValueToField(namespaceInput, tableNameInput, fieldNameInput, fieldIndexInput, pushToFieldInput);
+            }}
+          >
+            pushValueToField
+          </button>
+        </div>
+      </div>
+
+      <div>
         <button
           type="button"
           onClick={async (event) => {
@@ -316,6 +363,7 @@ export const App = () => {
           getTable
         </button>
       </div>
+
       <div>
         <h1>Grid Examples</h1>
         <div>
@@ -330,7 +378,7 @@ export const App = () => {
             type="button"
             onClick={async (event) => {
               event.preventDefault();
-              setGridLimit(gridLimitVal, gridLimitVal);
+              await setGridLimit(gridLimitVal, gridLimitVal);
               updateGridSize();
             }}
           >

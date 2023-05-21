@@ -10,6 +10,7 @@ import { IGridConstantsSystem } from "./IGridConstantsSystem.sol";
 import { IIncrementSystem } from "./IIncrementSystem.sol";
 import { ITestDataSystem } from "./ITestDataSystem.sol";
 import { ITestKeyedDataSystem } from "./ITestKeyedDataSystem.sol";
+import { IUICreatorSystem } from "./IUICreatorSystem.sol";
 
 /**
  * The IWorld interface includes all systems dynamically added to the World
@@ -21,7 +22,8 @@ interface IWorld is
   IGridConstantsSystem,
   IIncrementSystem,
   ITestDataSystem,
-  ITestKeyedDataSystem
+  ITestKeyedDataSystem,
+  IUICreatorSystem
 {
 
 }

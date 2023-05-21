@@ -7,7 +7,16 @@ export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
 export function createSystemCalls(
   { worldSend, txReduced$, singletonEntity }: SetupNetworkResult,
-  { Counter, TestData, TestKeyedData, Grid2D, Grid2DTags, Grid2DTagger, GridConstants }: ClientComponents
+  {
+    Counter,
+    TestData,
+    TestKeyedData,
+    Grid2D,
+    Grid2DTags,
+    Grid2DTagger,
+    GridConstants,
+    NamespaceOwner,
+  }: ClientComponents
 ) {
   const increment = async () => {
     const tx = await worldSend("testing_IncrementSystem_increment", []);
@@ -28,9 +37,49 @@ export function createSystemCalls(
   };
 
   const pushRecordToTestKeyedData = async (id: number) => {
-    const tx = await worldSend("testing_TestKeyedDataSystem_pushRecordToTestKeyedData", [id]);
+    const tx = await worldSend("testing_TestKeyedDataSys_pushRecordToTestKeyedData", [id]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(TestKeyedData, { id });
+  };
+
+  const createNewNamespace = async (namespace: string) => {
+    const tx = await worldSend("testing_UICreatorSystem_createNewNamespace", [namespace]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+  };
+
+  const createNewTableInNamespace = async (namespace: string, tableName: string) => {
+    const tx = await worldSend("testing_UICreatorSystem_createNewTableInNamespace", [namespace, tableName]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(NamespaceOwner, { namespace, tableName });
+  };
+
+  const createNewFieldInTable = async (namespace: string, tableName: string, fieldName: string, fieldIndex: number) => {
+    const tx = await worldSend("testing_UICreatorSystem_createNewFieldInTable", [
+      namespace,
+      tableName,
+      fieldName,
+      fieldIndex,
+    ]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(NamespaceOwner, { namespace, tableName, fieldName, fieldIndex });
+  };
+
+  const pushValueToField = async (
+    namespace: string,
+    tableName: string,
+    fieldName: string,
+    fieldIndex: number,
+    inputData: string
+  ) => {
+    const tx = await worldSend("testing_UICreatorSystem_pushValueToField", [
+      namespace,
+      tableName,
+      fieldName,
+      fieldIndex,
+      inputData,
+    ]);
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(NamespaceOwner, { namespace, tableName, fieldName, fieldIndex, inputData });
   };
 
   const setGridPointData = async (x: number, y: number, isOccupied: boolean, data: string, author: string) => {
@@ -40,7 +89,7 @@ export function createSystemCalls(
   };
 
   const setGridLimit = async (x: number, y: number) => {
-    const tx = await worldSend("testing_GridConstantsSystem_setLimits", [x, y]);
+    const tx = await worldSend("testing_GridConstantsSys_setLimits", [x, y]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(GridConstants, singletonEntity);
   };
@@ -50,6 +99,10 @@ export function createSystemCalls(
     incrementSquared,
     pushRecordToTestData,
     pushRecordToTestKeyedData,
+    createNewNamespace,
+    createNewTableInNamespace,
+    createNewFieldInTable,
+    pushValueToField,
     setGridPointData,
     setGridLimit,
   };
