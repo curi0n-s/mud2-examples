@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@latticexyz/common": "2.0.0-alpha.1.148+85e38ba8",
+    "@latticexyz/dev-tools": "2.0.0-alpha.1.148+85e38ba8",
+    "@latticexyz/network": "2.0.0-alpha.1.148+85e38ba8",
+    "@latticexyz/react": "2.0.0-alpha.1.148+85e38ba8",
+    "@latticexyz/recs": "2.0.0-alpha.1.148+85e38ba8",
+    "@latticexyz/schema-type": "2.0.0-alpha.1.148+85e38ba8",
+    "@latticexyz/std-client": "2.0.0-alpha.1.148+85e38ba8",
+    "@latticexyz/utils": "2.0.0-alpha.1.148+85e38ba8",
+    "@latticexyz/world": "2.0.0-alpha.1.148+85e38ba8"
+  },
+  "devDependencies": {}
+}

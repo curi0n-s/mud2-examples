@@ -61,7 +61,7 @@ contract UICreatorSystem is System {
             stringToBytes16(tableName),
             keyArg,
             fieldIndex,
-            abi.encodePacked(true)
+            abi.encode(true)
         );
 
         string[] memory fieldNames = new string[](1);
