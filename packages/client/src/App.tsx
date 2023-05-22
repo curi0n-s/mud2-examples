@@ -7,6 +7,7 @@ import { encodeSchema, SchemaType } from "@latticexyz/schema-type";
 import { useMUD } from "./MUDContext";
 import { useState, useEffect } from "react";
 import "./App.css";
+import { NetworkEvents } from "@latticexyz/network";
 
 export const App = () => {
   const {
@@ -24,7 +25,7 @@ export const App = () => {
       pushValueToField,
       getValueFromField,
     },
-    network: { singletonEntity, storeCache, worldSend, worldContract, txReduced$ },
+    network: { singletonEntity, storeCache, worldSend, worldContract, txReduced$, ecsEvent$ },
   } = useMUD();
   const [recordId, setRecordId] = useState(0);
   const [namespaceInput, setNamespaceInput] = useState("");
@@ -43,6 +44,42 @@ export const App = () => {
     updateGridSize();
   }, []);
 
+  useEffect(() => {
+    const sub = ecsEvent$.subscribe((e) => {
+      console.log("ecsEvent$::eventType", e.type);
+      if (e.type === NetworkEvents.NetworkComponentUpdate) {
+        console.log("NetworkComponentUpdate", e.namespace, e.table, e.key, e.value);
+
+        // Manually store the updates in the store cache
+        if (e.value) storeCache.set<any>(e.namespace, e.table, e.key, e.value);
+        else storeCache.remove(e.namespace, e.table, e.key);
+      }
+    });
+    console.log("storeCache", storeCache);
+    return sub.unsubscribe();
+  }, []);
+
+  //must run on first txns after contract deploy
+  const testNamespaceName = "ns1";
+  const testTableName = "table1";
+  const testFieldName = "field1";
+  const testFieldIndex = "1";
+  const testFieldValue = "hello world";
+  const createDemo = async () => {
+    await createNewNamespace(testNamespaceName);
+    await createNewTableInNamespace(testNamespaceName, testTableName);
+    await createNewFieldInTable(testNamespaceName, testTableName, testFieldName, testFieldIndex);
+    await pushValueToField(
+      testNamespaceName,
+      testTableName,
+      testFieldName,
+      testFieldIndex,
+      stringToBytes32(testFieldValue)
+    );
+  };
+
+  const rows = useRows<any, string>(storeCache, { namespace: testNamespaceName, table: testTableName });
+  console.log("rows", rows);
   //===================================================================================================
   // ACCESSING TABLES
   //===================================================================================================
@@ -57,34 +94,19 @@ export const App = () => {
   console.log("TestKeyedData", TestKeyedData);
 
   const counter = useComponentValue(Counter, singletonEntity);
-  console.log("counter", counter);
-
   const testData = useComponentValue(TestData, singletonEntity);
-
   const counter2 = useRow(storeCache, { table: "Counter", key: {} });
-  console.log(counter2);
-
   const matchingEntities = useEntityQuery([Has(TestKeyedData)]);
-  console.log("entities", matchingEntities[0]);
 
   const matchingEntities2 = useEntityQuery([
     Has(TestKeyedData),
     HasValue(TestKeyedData, { testUint32: Number(recordId) }),
   ]);
 
-  console.log("recordId", recordId);
-  console.log("typeof recordId", typeof recordId);
-  console.log("entities2", matchingEntities2);
-
   const tableInstances = matchingEntities.map((testEntity) => getComponentValueStrict(TestKeyedData, testEntity));
-  console.log("tableInstance", tableInstances);
-  // console.log("tableInstances[1].testUint32", tableInstances[0].testUint32);
 
   //get table row by key (id)
-
   const testKeyedData2 = useRow(storeCache, { table: "TestKeyedData", key: { id: Number(recordId) } });
-  console.log("testKeyedData2", testKeyedData2);
-  console.log("testKeyedData2.testUint32", testKeyedData2?.value?.testUint32);
 
   //===================================================================================================
   // GET/SET GRID DATA
@@ -122,14 +144,14 @@ export const App = () => {
   const defineVaules = () => {};
 
   const namespace = stringToBytes16(namespaceInput);
-  console.log("world", worldContract.address);
-  console.log("namespace", namespace);
-  const tableName = stringToBytes16(tableNameInput);
-  const tableNameBytes32 = stringToBytes32(tableNameInput);
+  // console.log("world", worldContract.address);
+  // console.log("namespace", namespace);
+  // const tableName = stringToBytes16(tableNameInput);
+  // const tableNameBytes32 = stringToBytes32(tableNameInput);
 
   //checking schema types for adding them in UI dynamically
-  console.log("schemeType uint256", SchemaType.UINT256); //31
-  console.log("schemeType bytes32", SchemaType.BYTES32); //95
+  // console.log("schemeType uint256", SchemaType.UINT256); //31
+  // console.log("schemeType bytes32", SchemaType.BYTES32); //95
 
   //TS Call: https://github.com/latticexyz/mud/blob/641d0d35912622c99fcbb347b0c0af15efc0ad11/examples/minimal/packages/contracts/types/ethers-contracts/IWorld.ts#LL975C1-L990C37
   //Sol Function Def: https://github.com/latticexyz/mud/blob/641d0d35912622c99fcbb347b0c0af15efc0ad11/packages/world/src/modules/core/implementations/WorldRegistrationSystem.sol#L52
@@ -138,25 +160,6 @@ export const App = () => {
   // can NOT write to ROOT_NAME namespace
   // no resources at this selector yet (resources are namespaces, tables, and systems)
   //
-
-  //must run on first txns after contract deploy
-  const testNamespaceName = "ns1";
-  const testTableName = "table1";
-  const testFieldName = "field1";
-  const testFieldIndex = "1";
-  const testFieldValue = "hello world";
-  const createDemo = async () => {
-    await createNewNamespace(testNamespaceName);
-    await createNewTableInNamespace(testNamespaceName, testTableName);
-    await createNewFieldInTable(testNamespaceName, testTableName, testFieldName, testFieldIndex);
-    await pushValueToField(
-      testNamespaceName,
-      testTableName,
-      testFieldName,
-      testFieldIndex,
-      stringToBytes32(testFieldValue)
-    );
-  };
 
   // useEffect(() => {
 
