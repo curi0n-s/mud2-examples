@@ -28,12 +28,12 @@ export const App = () => {
     network: { singletonEntity, storeCache, worldSend, worldContract, txReduced$, ecsEvent$ },
   } = useMUD();
   const [recordId, setRecordId] = useState(0);
-  const [namespaceInput, setNamespaceInput] = useState("");
+  const [namespaceInput, setNamespaceInput] = useState("namespace1");
   const [tableId, setTableId] = useState("");
-  const [tableNameInput, setTableNameInput] = useState("");
-  const [fieldNameInput, setFieldNameInput] = useState("");
-  const [fieldIndexInput, setFieldIndexInput] = useState("");
-  const [pushToFieldInput, setPushToFieldInput] = useState("");
+  const [tableNameInput, setTableNameInput] = useState("table1");
+  const [fieldNameInput, setFieldNameInput] = useState("field1");
+  const [fieldIndexInput, setFieldIndexInput] = useState("1");
+  const [pushToFieldInput, setPushToFieldInput] = useState("value1");
   const [demoDone, setDemoDone] = useState(false);
 
   const [gridLimitVal, setGridLimitVal] = useState(5);
@@ -44,41 +44,58 @@ export const App = () => {
     updateGridSize();
   }, []);
 
-  useEffect(() => {
-    const sub = ecsEvent$.subscribe((e) => {
-      console.log("ecsEvent$::eventType", e.type);
-      if (e.type === NetworkEvents.NetworkComponentUpdate) {
-        console.log("NetworkComponentUpdate", e.namespace, e.table, e.key, e.value);
+  // useEffect(() => {
+  //   const sub = ecsEvent$.subscribe((e) => {
+  //     console.log("ecsEvent$::eventType", e.type);
+  //     if (e.type === NetworkEvents.NetworkComponentUpdate) {
+  //       console.log("NetworkComponentUpdate", e.namespace, e.table, e.key, e.value);
 
-        // Manually store the updates in the store cache
-        if (e.value) storeCache.set<any>(e.namespace, e.table, e.key, e.value);
-        else storeCache.remove(e.namespace, e.table, e.key);
+  //       // Manually store the updates in the store cache
+  //       if (e.value) storeCache.set<any>(e.namespace, e.table, e.key, e.value);
+  //       else storeCache.remove(e.namespace, e.table, e.key);
+  //     }
+  //   });
+  //   console.log("storeCache", storeCache);
+  //   return sub.unsubscribe();
+  // }, []);
+
+  //correction by alvarius 5/22/23
+  useEffect(() => {
+    const sub = ecsEvent$.subscribe((ecsUpdate) => {
+      console.log("got a new ecs event update", ecsUpdate);
+      console.log("current namespace", namespaceInput, tableNameInput);
+      if (ecsUpdate.namespace === namespaceInput && ecsUpdate.table === tableNameInput) {
+        console.log("updating store cache");
+        storeCache.set(ecsUpdate.namespace, ecsUpdate.table, ecsUpdate.key, {
+          ...ecsUpdate.partialValue,
+          ...ecsUpdate.value,
+        });
       }
     });
-    console.log("storeCache", storeCache);
-    return sub.unsubscribe();
-  }, []);
+
+    return () => sub?.unsubscribe();
+  }, [namespaceInput, tableNameInput]);
 
   //must run on first txns after contract deploy
-  const testNamespaceName = "ns1";
-  const testTableName = "table1";
-  const testFieldName = "field1";
-  const testFieldIndex = "1";
-  const testFieldValue = "hello world";
+  // const testNamespaceName = "ns1";
+  // const testTableName = "table1";
+  // const testFieldName = "field1";
+  // const testFieldIndex = "1";
+  // const testFieldValue = "hello world";
   const createDemo = async () => {
-    await createNewNamespace(testNamespaceName);
-    await createNewTableInNamespace(testNamespaceName, testTableName);
-    await createNewFieldInTable(testNamespaceName, testTableName, testFieldName, testFieldIndex);
+    await createNewNamespace(namespaceInput);
+    await createNewTableInNamespace(namespaceInput, tableNameInput);
+    await createNewFieldInTable(namespaceInput, tableNameInput, fieldNameInput, fieldIndexInput);
     await pushValueToField(
-      testNamespaceName,
-      testTableName,
-      testFieldName,
-      testFieldIndex,
-      stringToBytes32(testFieldValue)
+      namespaceInput,
+      tableNameInput,
+      fieldNameInput,
+      fieldIndexInput,
+      stringToBytes32(pushToFieldInput)
     );
   };
 
-  const rows = useRows<any, string>(storeCache, { namespace: testNamespaceName, table: testTableName });
+  const rows = useRows<any, string>(storeCache, { namespace: namespaceInput, table: tableNameInput });
   console.log("rows", rows);
   //===================================================================================================
   // ACCESSING TABLES
@@ -159,20 +176,18 @@ export const App = () => {
   // registers namespace if not already registered
   // can NOT write to ROOT_NAME namespace
   // no resources at this selector yet (resources are namespaces, tables, and systems)
-  //
 
-  // useEffect(() => {
+  //read from new tables
 
-  //neither work, does storeCache either not store these new tables or need to be updated?
   const fieldDataFromNewTable = useRow(storeCache, {
     table: tableNameInput,
-    key: { field1: stringToBytes32(testFieldValue) },
+    key: { field1: stringToBytes32(fieldNameInput) },
   });
   console.log("fieldDataFromNewTable", fieldDataFromNewTable);
 
-  const data2 = useRows(storeCache);
+  const storeCacheRead = useRows(storeCache);
   console.log("storeCache", storeCache);
-  console.log("data2", data2);
+  console.log("storeCacheRead", storeCacheRead);
 
   //===================================================================================================
   // UI
