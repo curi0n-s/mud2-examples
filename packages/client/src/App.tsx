@@ -195,27 +195,6 @@ export const App = () => {
   // no resources at this selector yet (resources are namespaces, tables, and systems)
   //
 
-  useEffect(() => {
-    const sub = ecsEvent$.subscribe((ecsUpdate) => {
-      console.log("got a new ecs event update", ecsUpdate);
-      console.log("current namespace", namespaceInput, tableNameInput);
-      if (
-        ecsUpdate.namespace === namespaceInput &&
-        ecsUpdate.table === tableNameInput
-      ) {
-        console.log("updating store cache");
-        storeCache.set(ecsUpdate.namespace, ecsUpdate.table, ecsUpdate.key, {
-          ...ecsUpdate.partialValue,
-          ...ecsUpdate.value,
-        });
-      }
-    });
-
-    return () => sub?.unsubscribe();
-  }, [namespaceInput, tableNameInput]);
-
-  // useEffect(() => {
-
   //neither work, does storeCache either not store these new tables or need to be updated?
   const fieldDataFromNewTable = useRow(storeCache, {
     table: tableNameInput,
