@@ -1,5 +1,10 @@
 //@ts-nocheck
-import { useComponentValue, useRow, useEntityQuery, useRows } from "@latticexyz/react";
+import {
+  useComponentValue,
+  useRow,
+  useEntityQuery,
+  useRows,
+} from "@latticexyz/react";
 // import { useTables } from "@latticexyz/dev-tools";
 import { Has, HasValue, getComponentValueStrict } from "@latticexyz/recs";
 import { stringToBytes16, stringToBytes32 } from "@latticexyz/utils";
@@ -25,15 +30,23 @@ export const App = () => {
       pushValueToField,
       getValueFromField,
     },
-    network: { singletonEntity, storeCache, worldSend, worldContract, txReduced$, ecsEvent$ },
+    network: {
+      singletonEntity,
+      storeCache,
+      worldSend,
+      worldContract,
+      txReduced$,
+      ecsEvent$,
+    },
   } = useMUD();
   const [recordId, setRecordId] = useState(0);
   const [namespaceInput, setNamespaceInput] = useState("namespace1");
   const [tableId, setTableId] = useState("");
-  const [tableNameInput, setTableNameInput] = useState("table1");
-  const [fieldNameInput, setFieldNameInput] = useState("field1");
-  const [fieldIndexInput, setFieldIndexInput] = useState("1");
-  const [pushToFieldInput, setPushToFieldInput] = useState("value1");
+  const [tableNameInput, setTableNameInput] = useState("");
+  const [fieldNameInput, setFieldNameInput] = useState("");
+  const [fieldIndexInput, setFieldIndexInput] = useState(0);
+  const [pushToFieldInput, setPushToFieldInput] = useState("");
+
   const [demoDone, setDemoDone] = useState(false);
 
   const [gridLimitVal, setGridLimitVal] = useState(5);
@@ -61,15 +74,20 @@ export const App = () => {
 
   //correction by alvarius 5/22/23
   useEffect(() => {
-    const sub = ecsEvent$.subscribe((ecsUpdate) => {
-      console.log("got a new ecs event update", ecsUpdate);
-      console.log("current namespace", namespaceInput, tableNameInput);
-      if (ecsUpdate.namespace === namespaceInput && ecsUpdate.table === tableNameInput) {
-        console.log("updating store cache");
-        storeCache.set(ecsUpdate.namespace, ecsUpdate.table, ecsUpdate.key, {
-          ...ecsUpdate.partialValue,
-          ...ecsUpdate.value,
-        });
+    const sub = ecsEvent$.subscribe((e) => {
+      console.log("ecsEvent$::eventType", e.type);
+      if (e.type === NetworkEvents.NetworkComponentUpdate) {
+        console.log(
+          "NetworkComponentUpdate",
+          e.namespace,
+          e.table,
+          e.key,
+          e.value
+        );
+
+        // Manually store the updates in the store cache
+        if (e.value) storeCache.set<any>(e.namespace, e.table, e.key, e.value);
+        else storeCache.remove(e.namespace, e.table, e.key);
       }
     });
 
@@ -83,9 +101,14 @@ export const App = () => {
   // const testFieldIndex = "1";
   // const testFieldValue = "hello world";
   const createDemo = async () => {
-    await createNewNamespace(namespaceInput);
-    await createNewTableInNamespace(namespaceInput, tableNameInput);
-    await createNewFieldInTable(namespaceInput, tableNameInput, fieldNameInput, fieldIndexInput);
+    await createNewNamespace(testNamespaceName);
+    await createNewTableInNamespace(testNamespaceName, testTableName);
+    await createNewFieldInTable(
+      testNamespaceName,
+      testTableName,
+      testFieldName,
+      testFieldIndex
+    );
     await pushValueToField(
       namespaceInput,
       tableNameInput,
@@ -95,7 +118,10 @@ export const App = () => {
     );
   };
 
-  const rows = useRows<any, string>(storeCache, { namespace: namespaceInput, table: tableNameInput });
+  const rows = useRows<any, string>(storeCache, {
+    namespace: testNamespaceName,
+    table: testTableName,
+  });
   console.log("rows", rows);
   //===================================================================================================
   // ACCESSING TABLES
@@ -120,16 +146,24 @@ export const App = () => {
     HasValue(TestKeyedData, { testUint32: Number(recordId) }),
   ]);
 
-  const tableInstances = matchingEntities.map((testEntity) => getComponentValueStrict(TestKeyedData, testEntity));
+  const tableInstances = matchingEntities.map((testEntity) =>
+    getComponentValueStrict(TestKeyedData, testEntity)
+  );
 
   //get table row by key (id)
-  const testKeyedData2 = useRow(storeCache, { table: "TestKeyedData", key: { id: Number(recordId) } });
+  const testKeyedData2 = useRow(storeCache, {
+    table: "TestKeyedData",
+    key: { id: Number(recordId) },
+  });
 
   //===================================================================================================
   // GET/SET GRID DATA
   //===================================================================================================
 
-  const gridData = useEntityQuery([Has(Grid2D), HasValue(Grid2D, { isOccupied: true })]);
+  const gridData = useEntityQuery([
+    Has(Grid2D),
+    HasValue(Grid2D, { isOccupied: true }),
+  ]);
   console.log("gridData, isOccupied=true", gridData);
 
   const updateGridSize = () => {
@@ -163,7 +197,7 @@ export const App = () => {
   const namespace = stringToBytes16(namespaceInput);
   // console.log("world", worldContract.address);
   // console.log("namespace", namespace);
-  // const tableName = stringToBytes16(tableNameInput);
+  const tableName = stringToBytes16(tableNameInput);
   // const tableNameBytes32 = stringToBytes32(tableNameInput);
 
   //checking schema types for adding them in UI dynamically
@@ -177,17 +211,20 @@ export const App = () => {
   // can NOT write to ROOT_NAME namespace
   // no resources at this selector yet (resources are namespaces, tables, and systems)
 
-  //read from new tables
-
   const fieldDataFromNewTable = useRow(storeCache, {
     table: tableNameInput,
     key: { field1: stringToBytes32(fieldNameInput) },
   });
   console.log("fieldDataFromNewTable", fieldDataFromNewTable);
 
-  const storeCacheRead = useRows(storeCache);
+  const allRows = useRows(storeCache);
+  const newTableRows = useRows(storeCache, {
+    namespace: namespaceInput,
+    table: tableNameInput,
+  });
   console.log("storeCache", storeCache);
-  console.log("storeCacheRead", storeCacheRead);
+  console.log("all rows", allRows);
+  console.log("new table rows", tableNameInput, newTableRows);
 
   //===================================================================================================
   // UI
@@ -242,15 +279,20 @@ export const App = () => {
           TestData testString: <span>{testData?.testString ?? "??"}</span>
         </p>
         <p>
-          TestData testUint32Array: <span>{testData?.testUint32Array[0] ?? "??"}</span>,{" "}
-          <span>{testData?.testUint32Array[1] ?? "??"}</span>, <span>{testData?.testUint32Array[2] ?? "??"}</span>
+          TestData testUint32Array:{" "}
+          <span>{testData?.testUint32Array[0] ?? "??"}</span>,{" "}
+          <span>{testData?.testUint32Array[1] ?? "??"}</span>,{" "}
+          <span>{testData?.testUint32Array[2] ?? "??"}</span>
         </p>
       </div>
       <button
         type="button"
         onClick={async (event) => {
           event.preventDefault();
-          console.log("testData record testUint32:", await pushRecordToTestData());
+          console.log(
+            "testData record testUint32:",
+            await pushRecordToTestData()
+          );
         }}
       >
         Push Record
@@ -259,10 +301,12 @@ export const App = () => {
       <h2>Add record to table by id</h2>
       <p>
         {/* get data from testKeyedData of key recordId */}
-        TestKeyedData testUint32: <span>{testKeyedData2?.value?.testUint32 ?? "??" ?? "??"}</span>
+        TestKeyedData testUint32:{" "}
+        <span>{testKeyedData2?.value?.testUint32 ?? "??" ?? "??"}</span>
       </p>
       <p>
-        TestKeyedData testBytes32: <span>{testKeyedData2?.value?.testBytes32 ?? "??"}</span>
+        TestKeyedData testBytes32:{" "}
+        <span>{testKeyedData2?.value?.testBytes32 ?? "??"}</span>
       </p>
       <div>
         <input
@@ -284,7 +328,10 @@ export const App = () => {
 
       <p>________________________________________________________</p>
       <h2>Namespace, Table, (Metadata), Field, Record Creation</h2>
-      <p>Keep all values the same throughout, i.e., don't change namespace between namespace and table creation...</p>
+      <p>
+        Keep all values the same throughout, i.e., don't change namespace
+        between namespace and table creation...
+      </p>
       <h3>Create Namespace (namespaceName)</h3>
 
       <div>
@@ -338,10 +385,17 @@ export const App = () => {
         <p></p>
         <h3>Create Field (fieldName, fieldIndex)</h3>
         <p>
-          fieldIndex must be {">"} 0 and possibly {"<"} number of fields defined in schema (1 atm)
+          fieldIndex must be {">"} 0 and possibly {"<"} number of fields defined
+          in schema (1 atm)
         </p>
-        <p>system currently accommodates one field whose input data can fit in bytes32</p>
-        <p>auto-creates metadata in system function call (reason for one field limit atm...)</p>
+        <p>
+          system currently accommodates one field whose input data can fit in
+          bytes32
+        </p>
+        <p>
+          auto-creates metadata in system function call (reason for one field
+          limit atm...)
+        </p>
         <div>
           <input
             onChange={(event) => {
@@ -359,7 +413,12 @@ export const App = () => {
             type="button"
             onClick={async (event) => {
               event.preventDefault();
-              await createNewFieldInTable(namespaceInput, tableNameInput, fieldNameInput, fieldIndexInput);
+              await createNewFieldInTable(
+                namespaceInput,
+                tableNameInput,
+                fieldNameInput,
+                fieldIndexInput
+              );
             }}
           >
             createNewFieldInTable
@@ -381,7 +440,10 @@ export const App = () => {
             type="button"
             onClick={async (event) => {
               event.preventDefault();
-              console.log("stringToBytes32(pushToFieldInput)", stringToBytes32(pushToFieldInput));
+              console.log(
+                "stringToBytes32(pushToFieldInput)",
+                stringToBytes32(pushToFieldInput)
+              );
               await pushValueToField(
                 namespaceInput,
                 tableNameInput,
@@ -404,7 +466,14 @@ export const App = () => {
           <button
             onClick={async (event) => {
               event.preventDefault();
-              console.log(await getValueFromField(namespaceInput, tableNameInput, fieldNameInput, fieldIndexInput));
+              console.log(
+                await getValueFromField(
+                  namespaceInput,
+                  tableNameInput,
+                  fieldNameInput,
+                  fieldIndexInput
+                )
+              );
             }}
           >
             getValueFromField

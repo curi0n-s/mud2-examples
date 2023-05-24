@@ -31,37 +31,59 @@ export function createSystemCalls(
   };
 
   const pushRecordToTestData = async () => {
-    const tx = await worldSend("testing_TestDataSystem_pushRecordToTestData", []);
+    const tx = await worldSend(
+      "testing_TestDataSystem_pushRecordToTestData",
+      []
+    );
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(TestData, singletonEntity);
   };
 
   const pushRecordToTestKeyedData = async (id: number) => {
-    const tx = await worldSend("testing_TestKeyedDataSys_pushRecordToTestKeyedData", [id]);
+    const tx = await worldSend(
+      "testing_TestKeyedDataSys_pushRecordToTestKeyedData",
+      [id]
+    );
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(TestKeyedData, { id });
   };
 
   const createNewNamespace = async (namespace: string) => {
-    const tx = await worldSend("testing_UICreatorSystem_createNewNamespace", [namespace]);
+    const tx = await worldSend("testing_UICreatorSystem_createNewNamespace", [
+      namespace,
+    ]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
   };
 
-  const createNewTableInNamespace = async (namespace: string, tableName: string) => {
-    const tx = await worldSend("testing_UICreatorSystem_createNewTableInNamespace", [namespace, tableName]);
+  const createNewTableInNamespace = async (
+    namespace: string,
+    tableName: string
+  ) => {
+    const tx = await worldSend(
+      "testing_UICreatorSystem_createNewTableInNamespace",
+      [namespace, tableName]
+    );
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(NamespaceOwner, { namespace, tableName });
   };
 
-  const createNewFieldInTable = async (namespace: string, tableName: string, fieldName: string, fieldIndex: number) => {
-    const tx = await worldSend("testing_UICreatorSystem_createNewFieldInTable", [
+  const createNewFieldInTable = async (
+    namespace: string,
+    tableName: string,
+    fieldName: string,
+    fieldIndex: number
+  ) => {
+    const tx = await worldSend(
+      "testing_UICreatorSystem_createNewFieldInTable",
+      [namespace, tableName, fieldName, fieldIndex, { gasLimit: 1_000_000 }]
+    );
+    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
+    return getComponentValue(NamespaceOwner, {
       namespace,
       tableName,
       fieldName,
       fieldIndex,
-    ]);
-    await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
-    return getComponentValue(NamespaceOwner, { namespace, tableName, fieldName, fieldIndex });
+    });
   };
 
   const pushValueToField = async (
@@ -79,10 +101,21 @@ export function createSystemCalls(
       inputData,
     ]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
-    return getComponentValue(NamespaceOwner, { namespace, tableName, fieldName, fieldIndex, inputData });
+    return getComponentValue(NamespaceOwner, {
+      namespace,
+      tableName,
+      fieldName,
+      fieldIndex,
+      inputData,
+    });
   };
 
-  const getValueFromField = async (namespace: string, tableName: string, fieldName: string, fieldIndex: number) => {
+  const getValueFromField = async (
+    namespace: string,
+    tableName: string,
+    fieldName: string,
+    fieldIndex: number
+  ) => {
     const tx = await worldSend("testing_UICreatorSystem_getValueFromField", [
       namespace,
       tableName,
@@ -90,11 +123,28 @@ export function createSystemCalls(
       fieldIndex,
     ]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
-    return getComponentValue(NamespaceOwner, { namespace, tableName, fieldName, fieldIndex });
+    return getComponentValue(NamespaceOwner, {
+      namespace,
+      tableName,
+      fieldName,
+      fieldIndex,
+    });
   };
 
-  const setGridPointData = async (x: number, y: number, isOccupied: boolean, data: string, author: string) => {
-    const tx = await worldSend("testing_Grid2DSystem_setGridPointData", [x, y, isOccupied, author, data]);
+  const setGridPointData = async (
+    x: number,
+    y: number,
+    isOccupied: boolean,
+    data: string,
+    author: string
+  ) => {
+    const tx = await worldSend("testing_Grid2DSystem_setGridPointData", [
+      x,
+      y,
+      isOccupied,
+      author,
+      data,
+    ]);
     await awaitStreamValue(txReduced$, (txHash) => txHash === tx.hash);
     return getComponentValue(Grid2D, { x, y });
   };
